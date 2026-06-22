@@ -3,20 +3,36 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Farm2Me API - farm-to-table fresh produce delivery
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: products
+    description: Product operations
+  - name: categories
+    description: Category operations
+  - name: farms
+    description: Farm operations
+  - name: cart
+    description: Cart operations
+  - name: orders
+    description: Order operations
+  - name: reviews
+    description: Review operations
+  - name: boxes
+    description: Subscription box operations
+  - name: discover
+    description: Discovery / featured content
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +40,368 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /categories:
+    get:
+      operationId: listCategories
+      tags: [categories]
+      summary: List all product categories
+      responses:
+        "200":
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+
+  /products:
+    get:
+      operationId: listProducts
+      tags: [products]
+      summary: List products with optional filters
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: organic
+          in: query
+          schema:
+            type: boolean
+        - name: seasonal
+          in: query
+          schema:
+            type: boolean
+        - name: farmId
+          in: query
+          schema:
+            type: ["integer", "null"]
+        - name: minPrice
+          in: query
+          schema:
+            type: ["number", "null"]
+        - name: maxPrice
+          in: query
+          schema:
+            type: ["number", "null"]
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [price_asc, price_desc, rating, newest]
+      responses:
+        "200":
+          description: List of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+
+  /products/featured:
+    get:
+      operationId: listFeaturedProducts
+      tags: [discover]
+      summary: Get featured products for homepage
+      responses:
+        "200":
+          description: Featured products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+
+  /products/seasonal:
+    get:
+      operationId: listSeasonalProducts
+      tags: [discover]
+      summary: Get currently seasonal products
+      responses:
+        "200":
+          description: Seasonal products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+
+  /products/{id}:
+    get:
+      operationId: getProduct
+      tags: [products]
+      summary: Get a single product by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Product detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "404":
+          description: Not found
+
+  /products/{id}/reviews:
+    get:
+      operationId: listProductReviews
+      tags: [reviews]
+      summary: List reviews for a product
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of reviews
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Review"
+    post:
+      operationId: createProductReview
+      tags: [reviews]
+      summary: Add a review to a product
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReviewInput"
+      responses:
+        "201":
+          description: Review created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Review"
+
+  /farms:
+    get:
+      operationId: listFarms
+      tags: [farms]
+      summary: List all partner farms
+      responses:
+        "200":
+          description: List of farms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Farm"
+
+  /farms/{id}:
+    get:
+      operationId: getFarm
+      tags: [farms]
+      summary: Get a single farm by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Farm detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Farm"
+        "404":
+          description: Not found
+
+  /cart:
+    get:
+      operationId: getCart
+      tags: [cart]
+      summary: Get current cart
+      responses:
+        "200":
+          description: Cart
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+    delete:
+      operationId: clearCart
+      tags: [cart]
+      summary: Clear all items from cart
+      responses:
+        "200":
+          description: Cart cleared
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+
+  /cart/items:
+    post:
+      operationId: addToCart
+      tags: [cart]
+      summary: Add item to cart or update quantity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CartItemInput"
+      responses:
+        "200":
+          description: Updated cart
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+
+  /cart/items/{productId}:
+    patch:
+      operationId: updateCartItem
+      tags: [cart]
+      summary: Update quantity of a cart item
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CartItemUpdate"
+      responses:
+        "200":
+          description: Updated cart
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+    delete:
+      operationId: removeFromCart
+      tags: [cart]
+      summary: Remove an item from cart
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Updated cart
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+
+  /orders:
+    get:
+      operationId: listOrders
+      tags: [orders]
+      summary: List all orders (for the session)
+      responses:
+        "200":
+          description: List of orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Order"
+    post:
+      operationId: createOrder
+      tags: [orders]
+      summary: Place an order from current cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderInput"
+      responses:
+        "201":
+          description: Order placed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+
+  /orders/{id}:
+    get:
+      operationId: getOrder
+      tags: [orders]
+      summary: Get a single order by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Order detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "404":
+          description: Not found
+
+  /boxes:
+    get:
+      operationId: listBoxes
+      tags: [boxes]
+      summary: List subscription boxes
+      responses:
+        "200":
+          description: List of boxes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SubscriptionBox"
+
+  /discover/summary:
+    get:
+      operationId: getDiscoverSummary
+      tags: [discover]
+      summary: Get homepage discovery summary (counts, highlights)
+      responses:
+        "200":
+          description: Discovery summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DiscoverSummary"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +412,268 @@ components:
       required:
         - status
 
+    Category:
+      type: object
+      required: [id, name, slug, productCount]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        imageUrl:
+          type: ["string", "null"]
+        productCount:
+          type: integer
+        description:
+          type: ["string", "null"]
+
+    Product:
+      type: object
+      required: [id, name, price, unit, categorySlug, farmId, farmName, isOrganic, isSeasonal, isFeatured, stock, rating, reviewCount]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        price:
+          type: number
+        unit:
+          type: string
+        categorySlug:
+          type: string
+        categoryName:
+          type: string
+        farmId:
+          type: integer
+        farmName:
+          type: string
+        farmLocation:
+          type: ["string", "null"]
+        isOrganic:
+          type: boolean
+        isSeasonal:
+          type: boolean
+        isFeatured:
+          type: boolean
+        imageUrl:
+          type: ["string", "null"]
+        stock:
+          type: integer
+        rating:
+          type: number
+        reviewCount:
+          type: integer
+        badges:
+          type: array
+          items:
+            type: string
+
+    Farm:
+      type: object
+      required: [id, name, location, established]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        location:
+          type: string
+        state:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+        story:
+          type: ["string", "null"]
+        imageUrl:
+          type: ["string", "null"]
+        coverImageUrl:
+          type: ["string", "null"]
+        established:
+          type: integer
+        certifications:
+          type: array
+          items:
+            type: string
+        productCount:
+          type: ["integer", "null"]
+        farmerName:
+          type: ["string", "null"]
+        farmerImageUrl:
+          type: ["string", "null"]
+
+    Review:
+      type: object
+      required: [id, productId, rating, createdAt]
+      properties:
+        id:
+          type: integer
+        productId:
+          type: integer
+        reviewerName:
+          type: string
+        rating:
+          type: integer
+        comment:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    ReviewInput:
+      type: object
+      required: [rating, reviewerName]
+      properties:
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        reviewerName:
+          type: string
+        comment:
+          type: string
+
+    CartItem:
+      type: object
+      required: [productId, quantity, product]
+      properties:
+        productId:
+          type: integer
+        quantity:
+          type: integer
+        product:
+          $ref: "#/components/schemas/Product"
+
+    Cart:
+      type: object
+      required: [items, total, itemCount]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItem"
+        total:
+          type: number
+        itemCount:
+          type: integer
+
+    CartItemInput:
+      type: object
+      required: [productId, quantity]
+      properties:
+        productId:
+          type: integer
+        quantity:
+          type: integer
+
+    CartItemUpdate:
+      type: object
+      required: [quantity]
+      properties:
+        quantity:
+          type: integer
+
+    OrderItem:
+      type: object
+      required: [productId, productName, quantity, price, unit]
+      properties:
+        productId:
+          type: integer
+        productName:
+          type: string
+        quantity:
+          type: integer
+        price:
+          type: number
+        unit:
+          type: string
+        imageUrl:
+          type: ["string", "null"]
+
+    Order:
+      type: object
+      required: [id, items, total, status, createdAt]
+      properties:
+        id:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderItem"
+        total:
+          type: number
+        status:
+          type: string
+          enum: [pending, confirmed, out_for_delivery, delivered, cancelled]
+        deliveryDate:
+          type: ["string", "null"]
+        deliveryAddress:
+          type: ["string", "null"]
+        customerName:
+          type: ["string", "null"]
+        customerPhone:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        notes:
+          type: ["string", "null"]
+
+    OrderInput:
+      type: object
+      required: [customerName, customerPhone, deliveryAddress]
+      properties:
+        customerName:
+          type: string
+        customerPhone:
+          type: string
+        deliveryAddress:
+          type: string
+        deliveryDate:
+          type: string
+        notes:
+          type: string
+
+    SubscriptionBox:
+      type: object
+      required: [id, name, price, frequency]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        price:
+          type: number
+        frequency:
+          type: string
+          enum: [weekly, biweekly, monthly]
+        imageUrl:
+          type: ["string", "null"]
+        items:
+          type: array
+          items:
+            type: string
+        highlight:
+          type: ["string", "null"]
+        isPopular:
+          type: boolean
+
+    DiscoverSummary:
+      type: object
+      required: [totalProducts, totalFarms, totalCategories, happyCustomers]
+      properties:
+        totalProducts:
+          type: integer
+        totalFarms:
+          type: integer
+        totalCategories:
+          type: integer
+        happyCustomers:
+          type: integer
+        organicPercentage:
+          type: integer
+        avgDeliveryHours:
+          type: integer

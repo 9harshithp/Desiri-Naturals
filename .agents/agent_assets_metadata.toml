@@ -1,0 +1,50 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "3o_gm6f3JNLE5zxoWRQaG"
+uri = "file://artifacts/farm2me/public/images/hero.png"
+type = "image"
+title = "Lush farm produce flatlay"
+
+[[generated]]
+id = "JJiO7-NzD8xGOQF1ZYe9w"
+uri = "file://artifacts/farm2me/public/images/tomatoes.png"
+type = "image"
+title = "Fresh organic tomatoes"
+
+[[generated]]
+id = "IONiLHmv2gH6lCyZrq2N-"
+uri = "file://artifacts/farm2me/public/images/mangoes.png"
+type = "image"
+title = "Fresh Indian Alphonso mangoes"
+
+[[generated]]
+id = "LzIsNFFYZnhJQAZy_Fj2q"
+uri = "file://artifacts/farm2me/public/images/farmer.png"
+type = "image"
+title = "Indian farmer in field"
+
+[[generated]]
+id = "QWN11mOYwNNF8NrLB3vZE"
+uri = "file://artifacts/farm2me/public/images/spinach.png"
+type = "image"
+title = "Fresh green spinach"
+
+[[generated]]
+id = "XA6Jp74XUhX6c7ts4Tc_y"
+uri = "file://artifacts/farm2me/public/images/milk.png"
+type = "image"
+title = "Fresh raw milk"
+
+[[generated]]
+id = "hErvLgupAMiAqZvqU__PD"
+uri = "file://artifacts/farm2me/public/images/box.png"
+type = "image"
+title = "Subscription box with produce"
+
+[[generated]]
+id = "VfBbWWsMHbwOPvikGaxuy"
+uri = "file://artifacts/farm2me/public/images/farm-landscape.png"
+type = "image"
+title = "Indian farm landscape"

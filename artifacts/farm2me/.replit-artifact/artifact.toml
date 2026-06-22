@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Farm2Me"
+version = "1.0.0"
+id = "artifacts/farm2me"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25479
+
+[services.development]
+run = "pnpm --filter @workspace/farm2me run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/farm2me", "run", "build" ]
+publicDir = "artifacts/farm2me/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25479"
+BASE_PATH = "/"
