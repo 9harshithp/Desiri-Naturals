@@ -1,6 +1,6 @@
-# [Project name]
+# Farm2Me
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Farm-to-table fresh produce delivery platform for India — better than farm2me.in. Connects conscious consumers directly with local farmers for fresh, organic produce delivered within 24 hours of harvest.
 
 ## Run & Operate
 
@@ -19,18 +19,40 @@ _Replace the heading above with the project's name, and this line with one sente
 - Validation: Zod (`zod/v4`), `drizzle-zod`
 - API codegen: Orval (from OpenAPI spec)
 - Build: esbuild (CJS bundle)
+- Frontend: React + Vite, TanStack Query, wouter routing, shadcn/ui
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `lib/db/src/schema.ts` — source of truth for DB schema (users, products, orders, farms, etc.)
+- `lib/api-spec/openapi.yaml` — source of truth for API contract
+- `lib/api-client-react/src/generated/` — generated hooks (do not edit manually)
+- `artifacts/api-server/src/routes/` — all Express route handlers
+- `artifacts/farm2me/src/pages/` — all frontend pages
+- `artifacts/farm2me/src/context/auth-context.tsx` — auth state (cookie-based)
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Cookie-based auth: `farm2me_session` for anonymous cart, `farm2me_uid` for authenticated user ID
+- Role-based access: customer (default) and admin roles stored in users table
+- Admin routes are guarded server-side by checking `farm2me_uid` cookie and role === "admin"
+- Products have `freshnessScore` (0–100) displayed as an animated bar on the product detail page
+- Orders store `paymentMethod` (upi/card/cod) and `deliverySlot` (e.g. "9am-12pm")
+- No real Google OAuth (free tier demo) — Google button pre-fills demo credentials
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- **Browse & discover**: Products page with category/farm/organic filters; home page with featured produce, subscription boxes, farm stories
+- **Product detail**: Freshness Score bar, star ratings, review submission form, related products
+- **Cart & checkout**: Enhanced checkout with 4 delivery time slots + 3 payment methods (UPI, Card, COD)
+- **Auth**: Login/signup with split layout, role selector (Customer/Admin), password strength meter
+- **Admin dashboard**: Sidebar nav with Overview stats, Inventory management (stock/featured/freshness), Orders management with status updates
+- **Farms**: 8 partner farms across India, individual farm detail pages
+- **Subscription boxes**: 5 curated weekly boxes
+
+## Demo credentials
+
+- Admin: `admin@farm2me.in` / `admin123` → redirects to /admin dashboard
+- Customer: `demo@farm2me.in` / `demo123` → regular customer account
 
 ## User preferences
 
@@ -38,7 +60,9 @@ _Populate as you build — explicit user instructions worth remembering across s
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- After running codegen, restart the frontend Vite workflow to clear HMR pre-transform errors
+- Admin routes require both the `farm2me_uid` cookie AND `role = 'admin'` in the DB
+- When adding new fields to orders, also destructure them in the `POST /orders` handler body destructure line
 
 ## Pointers
 

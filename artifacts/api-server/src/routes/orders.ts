@@ -20,7 +20,7 @@ router.get("/orders", async (req, res): Promise<void> => {
 
 router.post("/orders", async (req, res): Promise<void> => {
   const sessionId = getSessionId(req);
-  const { customerName, customerPhone, deliveryAddress, deliveryDate, notes } = req.body;
+  const { customerName, customerPhone, deliveryAddress, deliveryDate, notes, paymentMethod, deliverySlot } = req.body;
 
   if (!customerName || !customerPhone || !deliveryAddress) {
     res.status(400).json({ error: "customerName, customerPhone, deliveryAddress are required" });
@@ -72,6 +72,8 @@ router.post("/orders", async (req, res): Promise<void> => {
       customerName,
       customerPhone,
       notes: notes || null,
+      paymentMethod: paymentMethod || null,
+      deliverySlot: deliverySlot || null,
     })
     .returning();
 

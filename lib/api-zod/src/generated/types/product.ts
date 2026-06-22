@@ -28,4 +28,5 @@ export interface Product {
   rating: number;
   reviewCount: number;
   badges?: string[];
+  freshnessScore: number;
 }

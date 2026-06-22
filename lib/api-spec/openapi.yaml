@@ -9,23 +9,16 @@ servers:
     description: Base API path
 tags:
   - name: health
-    description: Health operations
+  - name: auth
   - name: products
-    description: Product operations
   - name: categories
-    description: Category operations
   - name: farms
-    description: Farm operations
   - name: cart
-    description: Cart operations
   - name: orders
-    description: Order operations
   - name: reviews
-    description: Review operations
   - name: boxes
-    description: Subscription box operations
   - name: discover
-    description: Discovery / featured content
+  - name: admin
 
 paths:
   /healthz:
@@ -40,6 +33,79 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current session user
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUser"
+        "401":
+          description: Not authenticated
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login with email and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUser"
+        "401":
+          description: Invalid credentials
+
+  /auth/register:
+    post:
+      operationId: register
+      tags: [auth]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterInput"
+      responses:
+        "201":
+          description: Registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUser"
+        "409":
+          description: Email already exists
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Logout current session
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
 
   /categories:
     get:
@@ -393,7 +459,7 @@ paths:
     get:
       operationId: getDiscoverSummary
       tags: [discover]
-      summary: Get homepage discovery summary (counts, highlights)
+      summary: Get homepage discovery summary
       responses:
         "200":
           description: Discovery summary
@@ -401,6 +467,92 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DiscoverSummary"
+
+  /admin/stats:
+    get:
+      operationId: getAdminStats
+      tags: [admin]
+      summary: Get admin dashboard stats
+      responses:
+        "200":
+          description: Stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminStats"
+        "403":
+          description: Forbidden
+
+  /admin/orders:
+    get:
+      operationId: listAdminOrders
+      tags: [admin]
+      summary: List all orders (admin)
+      responses:
+        "200":
+          description: All orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Order"
+        "403":
+          description: Forbidden
+
+  /admin/products/{id}:
+    patch:
+      operationId: adminUpdateProduct
+      tags: [admin]
+      summary: Update a product (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductUpdate"
+      responses:
+        "200":
+          description: Updated product
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "403":
+          description: Forbidden
+
+  /admin/orders/{id}/status:
+    patch:
+      operationId: adminUpdateOrderStatus
+      tags: [admin]
+      summary: Update order status (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderStatusUpdate"
+      responses:
+        "200":
+          description: Updated order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "403":
+          description: Forbidden
 
 components:
   schemas:
@@ -411,6 +563,43 @@ components:
           type: string
       required:
         - status
+
+    AuthUser:
+      type: object
+      required: [id, name, email, role]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+        phone:
+          type: ["string", "null"]
+
+    LoginInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    RegisterInput:
+      type: object
+      required: [name, email, password]
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        phone:
+          type: string
 
     Category:
       type: object
@@ -431,7 +620,7 @@ components:
 
     Product:
       type: object
-      required: [id, name, price, unit, categorySlug, farmId, farmName, isOrganic, isSeasonal, isFeatured, stock, rating, reviewCount]
+      required: [id, name, price, unit, categorySlug, farmId, farmName, isOrganic, isSeasonal, isFeatured, stock, rating, reviewCount, freshnessScore]
       properties:
         id:
           type: integer
@@ -471,6 +660,20 @@ components:
           type: array
           items:
             type: string
+        freshnessScore:
+          type: integer
+
+    ProductUpdate:
+      type: object
+      properties:
+        price:
+          type: number
+        stock:
+          type: integer
+        isFeatured:
+          type: boolean
+        freshnessScore:
+          type: integer
 
     Farm:
       type: object
@@ -619,6 +822,10 @@ components:
           type: string
         notes:
           type: ["string", "null"]
+        paymentMethod:
+          type: ["string", "null"]
+        deliverySlot:
+          type: ["string", "null"]
 
     OrderInput:
       type: object
@@ -632,8 +839,20 @@ components:
           type: string
         deliveryDate:
           type: string
+        deliverySlot:
+          type: string
+        paymentMethod:
+          type: string
         notes:
           type: string
+
+    OrderStatusUpdate:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [pending, confirmed, out_for_delivery, delivered, cancelled]
 
     SubscriptionBox:
       type: object
@@ -677,3 +896,32 @@ components:
           type: integer
         avgDeliveryHours:
           type: integer
+
+    AdminStats:
+      type: object
+      required: [totalOrders, totalRevenue, totalProducts, totalCustomers, recentOrders]
+      properties:
+        totalOrders:
+          type: integer
+        totalRevenue:
+          type: number
+        totalProducts:
+          type: integer
+        totalCustomers:
+          type: integer
+        recentOrders:
+          type: array
+          items:
+            $ref: "#/components/schemas/Order"
+        topProducts:
+          type: array
+          items:
+            type: object
+            required: [name, revenue]
+            properties:
+              name:
+                type: string
+              revenue:
+                type: number
+              orders:
+                type: integer

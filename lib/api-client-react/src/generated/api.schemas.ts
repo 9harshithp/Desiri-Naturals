@@ -9,6 +9,27 @@ export interface HealthStatus {
   status: string;
 }
 
+export interface AuthUser {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  /** @nullable */
+  phone?: string | null;
+}
+
+export interface LoginInput {
+  email: string;
+  password: string;
+}
+
+export interface RegisterInput {
+  name: string;
+  email: string;
+  password: string;
+  phone?: string;
+}
+
 export interface Category {
   id: number;
   name: string;
@@ -42,6 +63,14 @@ export interface Product {
   rating: number;
   reviewCount: number;
   badges?: string[];
+  freshnessScore: number;
+}
+
+export interface ProductUpdate {
+  price?: number;
+  stock?: number;
+  isFeatured?: boolean;
+  freshnessScore?: number;
 }
 
 export interface Farm {
@@ -146,6 +175,10 @@ export interface Order {
   createdAt: string;
   /** @nullable */
   notes?: string | null;
+  /** @nullable */
+  paymentMethod?: string | null;
+  /** @nullable */
+  deliverySlot?: string | null;
 }
 
 export interface OrderInput {
@@ -153,7 +186,24 @@ export interface OrderInput {
   customerPhone: string;
   deliveryAddress: string;
   deliveryDate?: string;
+  deliverySlot?: string;
+  paymentMethod?: string;
   notes?: string;
+}
+
+export type OrderStatusUpdateStatus = typeof OrderStatusUpdateStatus[keyof typeof OrderStatusUpdateStatus];
+
+
+export const OrderStatusUpdateStatus = {
+  pending: 'pending',
+  confirmed: 'confirmed',
+  out_for_delivery: 'out_for_delivery',
+  delivered: 'delivered',
+  cancelled: 'cancelled',
+} as const;
+
+export interface OrderStatusUpdate {
+  status: OrderStatusUpdateStatus;
 }
 
 export type SubscriptionBoxFrequency = typeof SubscriptionBoxFrequency[keyof typeof SubscriptionBoxFrequency];
@@ -188,6 +238,25 @@ export interface DiscoverSummary {
   organicPercentage?: number;
   avgDeliveryHours?: number;
 }
+
+export type AdminStatsTopProductsItem = {
+  name: string;
+  revenue: number;
+  orders?: number;
+};
+
+export interface AdminStats {
+  totalOrders: number;
+  totalRevenue: number;
+  totalProducts: number;
+  totalCustomers: number;
+  recentOrders: Order[];
+  topProducts?: AdminStatsTopProductsItem[];
+}
+
+export type Logout200 = {
+  ok?: boolean;
+};
 
 export type ListProductsParams = {
 category?: string;

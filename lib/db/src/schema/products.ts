@@ -21,6 +21,7 @@ export const productsTable = pgTable("products", {
   rating: numeric("rating", { precision: 3, scale: 1 }).notNull().default("4.5"),
   reviewCount: integer("review_count").notNull().default(0),
   badges: text("badges").array().notNull().default([]),
+  freshnessScore: integer("freshness_score").notNull().default(85),
 });
 
 export const insertProductSchema = createInsertSchema(productsTable).omit({ id: true });

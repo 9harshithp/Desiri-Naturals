@@ -24,4 +24,8 @@ export interface Order {
   createdAt: string;
   /** @nullable */
   notes?: string | null;
+  /** @nullable */
+  paymentMethod?: string | null;
+  /** @nullable */
+  deliverySlot?: string | null;
 }

@@ -11,5 +11,7 @@ export interface OrderInput {
   customerPhone: string;
   deliveryAddress: string;
   deliveryDate?: string;
+  deliverySlot?: string;
+  paymentMethod?: string;
   notes?: string;
 }

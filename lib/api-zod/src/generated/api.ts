@@ -17,6 +17,54 @@ export const HealthCheckResponse = zod.object({
 
 
 /**
+ * @summary Get current session user
+ */
+export const GetMeResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "email": zod.string(),
+  "role": zod.string(),
+  "phone": zod.string().nullish()
+})
+
+
+/**
+ * @summary Login with email and password
+ */
+export const LoginBody = zod.object({
+  "email": zod.string(),
+  "password": zod.string()
+})
+
+export const LoginResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "email": zod.string(),
+  "role": zod.string(),
+  "phone": zod.string().nullish()
+})
+
+
+/**
+ * @summary Register a new user
+ */
+export const RegisterBody = zod.object({
+  "name": zod.string(),
+  "email": zod.string(),
+  "password": zod.string(),
+  "phone": zod.string().optional()
+})
+
+
+/**
+ * @summary Logout current session
+ */
+export const LogoutResponse = zod.object({
+  "ok": zod.boolean().optional()
+})
+
+
+/**
  * @summary List all product categories
  */
 export const ListCategoriesResponseItem = zod.object({
@@ -62,7 +110,8 @@ export const ListProductsResponseItem = zod.object({
   "stock": zod.number(),
   "rating": zod.number(),
   "reviewCount": zod.number(),
-  "badges": zod.array(zod.string()).optional()
+  "badges": zod.array(zod.string()).optional(),
+  "freshnessScore": zod.number()
 })
 export const ListProductsResponse = zod.array(ListProductsResponseItem)
 
@@ -88,7 +137,8 @@ export const ListFeaturedProductsResponseItem = zod.object({
   "stock": zod.number(),
   "rating": zod.number(),
   "reviewCount": zod.number(),
-  "badges": zod.array(zod.string()).optional()
+  "badges": zod.array(zod.string()).optional(),
+  "freshnessScore": zod.number()
 })
 export const ListFeaturedProductsResponse = zod.array(ListFeaturedProductsResponseItem)
 
@@ -114,7 +164,8 @@ export const ListSeasonalProductsResponseItem = zod.object({
   "stock": zod.number(),
   "rating": zod.number(),
   "reviewCount": zod.number(),
-  "badges": zod.array(zod.string()).optional()
+  "badges": zod.array(zod.string()).optional(),
+  "freshnessScore": zod.number()
 })
 export const ListSeasonalProductsResponse = zod.array(ListSeasonalProductsResponseItem)
 
@@ -144,7 +195,8 @@ export const GetProductResponse = zod.object({
   "stock": zod.number(),
   "rating": zod.number(),
   "reviewCount": zod.number(),
-  "badges": zod.array(zod.string()).optional()
+  "badges": zod.array(zod.string()).optional(),
+  "freshnessScore": zod.number()
 })
 
 
@@ -254,7 +306,8 @@ export const GetCartResponse = zod.object({
   "stock": zod.number(),
   "rating": zod.number(),
   "reviewCount": zod.number(),
-  "badges": zod.array(zod.string()).optional()
+  "badges": zod.array(zod.string()).optional(),
+  "freshnessScore": zod.number()
 })
 })),
   "total": zod.number(),
@@ -287,7 +340,8 @@ export const ClearCartResponse = zod.object({
   "stock": zod.number(),
   "rating": zod.number(),
   "reviewCount": zod.number(),
-  "badges": zod.array(zod.string()).optional()
+  "badges": zod.array(zod.string()).optional(),
+  "freshnessScore": zod.number()
 })
 })),
   "total": zod.number(),
@@ -325,7 +379,8 @@ export const AddToCartResponse = zod.object({
   "stock": zod.number(),
   "rating": zod.number(),
   "reviewCount": zod.number(),
-  "badges": zod.array(zod.string()).optional()
+  "badges": zod.array(zod.string()).optional(),
+  "freshnessScore": zod.number()
 })
 })),
   "total": zod.number(),
@@ -366,7 +421,8 @@ export const UpdateCartItemResponse = zod.object({
   "stock": zod.number(),
   "rating": zod.number(),
   "reviewCount": zod.number(),
-  "badges": zod.array(zod.string()).optional()
+  "badges": zod.array(zod.string()).optional(),
+  "freshnessScore": zod.number()
 })
 })),
   "total": zod.number(),
@@ -403,7 +459,8 @@ export const RemoveFromCartResponse = zod.object({
   "stock": zod.number(),
   "rating": zod.number(),
   "reviewCount": zod.number(),
-  "badges": zod.array(zod.string()).optional()
+  "badges": zod.array(zod.string()).optional(),
+  "freshnessScore": zod.number()
 })
 })),
   "total": zod.number(),
@@ -431,7 +488,9 @@ export const ListOrdersResponseItem = zod.object({
   "customerName": zod.string().nullish(),
   "customerPhone": zod.string().nullish(),
   "createdAt": zod.string(),
-  "notes": zod.string().nullish()
+  "notes": zod.string().nullish(),
+  "paymentMethod": zod.string().nullish(),
+  "deliverySlot": zod.string().nullish()
 })
 export const ListOrdersResponse = zod.array(ListOrdersResponseItem)
 
@@ -444,6 +503,8 @@ export const CreateOrderBody = zod.object({
   "customerPhone": zod.string(),
   "deliveryAddress": zod.string(),
   "deliveryDate": zod.string().optional(),
+  "deliverySlot": zod.string().optional(),
+  "paymentMethod": zod.string().optional(),
   "notes": zod.string().optional()
 })
 
@@ -472,7 +533,9 @@ export const GetOrderResponse = zod.object({
   "customerName": zod.string().nullish(),
   "customerPhone": zod.string().nullish(),
   "createdAt": zod.string(),
-  "notes": zod.string().nullish()
+  "notes": zod.string().nullish(),
+  "paymentMethod": zod.string().nullish(),
+  "deliverySlot": zod.string().nullish()
 })
 
 
@@ -494,7 +557,7 @@ export const ListBoxesResponse = zod.array(ListBoxesResponseItem)
 
 
 /**
- * @summary Get homepage discovery summary (counts, highlights)
+ * @summary Get homepage discovery summary
  */
 export const GetDiscoverSummaryResponse = zod.object({
   "totalProducts": zod.number(),
@@ -503,6 +566,141 @@ export const GetDiscoverSummaryResponse = zod.object({
   "happyCustomers": zod.number(),
   "organicPercentage": zod.number().optional(),
   "avgDeliveryHours": zod.number().optional()
+})
+
+
+/**
+ * @summary Get admin dashboard stats
+ */
+export const GetAdminStatsResponse = zod.object({
+  "totalOrders": zod.number(),
+  "totalRevenue": zod.number(),
+  "totalProducts": zod.number(),
+  "totalCustomers": zod.number(),
+  "recentOrders": zod.array(zod.object({
+  "id": zod.number(),
+  "items": zod.array(zod.object({
+  "productId": zod.number(),
+  "productName": zod.string(),
+  "quantity": zod.number(),
+  "price": zod.number(),
+  "unit": zod.string(),
+  "imageUrl": zod.string().nullish()
+})),
+  "total": zod.number(),
+  "status": zod.enum(['pending', 'confirmed', 'out_for_delivery', 'delivered', 'cancelled']),
+  "deliveryDate": zod.string().nullish(),
+  "deliveryAddress": zod.string().nullish(),
+  "customerName": zod.string().nullish(),
+  "customerPhone": zod.string().nullish(),
+  "createdAt": zod.string(),
+  "notes": zod.string().nullish(),
+  "paymentMethod": zod.string().nullish(),
+  "deliverySlot": zod.string().nullish()
+})),
+  "topProducts": zod.array(zod.object({
+  "name": zod.string(),
+  "revenue": zod.number(),
+  "orders": zod.number().optional()
+})).optional()
+})
+
+
+/**
+ * @summary List all orders (admin)
+ */
+export const ListAdminOrdersResponseItem = zod.object({
+  "id": zod.number(),
+  "items": zod.array(zod.object({
+  "productId": zod.number(),
+  "productName": zod.string(),
+  "quantity": zod.number(),
+  "price": zod.number(),
+  "unit": zod.string(),
+  "imageUrl": zod.string().nullish()
+})),
+  "total": zod.number(),
+  "status": zod.enum(['pending', 'confirmed', 'out_for_delivery', 'delivered', 'cancelled']),
+  "deliveryDate": zod.string().nullish(),
+  "deliveryAddress": zod.string().nullish(),
+  "customerName": zod.string().nullish(),
+  "customerPhone": zod.string().nullish(),
+  "createdAt": zod.string(),
+  "notes": zod.string().nullish(),
+  "paymentMethod": zod.string().nullish(),
+  "deliverySlot": zod.string().nullish()
+})
+export const ListAdminOrdersResponse = zod.array(ListAdminOrdersResponseItem)
+
+
+/**
+ * @summary Update a product (admin)
+ */
+export const AdminUpdateProductParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminUpdateProductBody = zod.object({
+  "price": zod.number().optional(),
+  "stock": zod.number().optional(),
+  "isFeatured": zod.boolean().optional(),
+  "freshnessScore": zod.number().optional()
+})
+
+export const AdminUpdateProductResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "description": zod.string().nullish(),
+  "price": zod.number(),
+  "unit": zod.string(),
+  "categorySlug": zod.string(),
+  "categoryName": zod.string().optional(),
+  "farmId": zod.number(),
+  "farmName": zod.string(),
+  "farmLocation": zod.string().nullish(),
+  "isOrganic": zod.boolean(),
+  "isSeasonal": zod.boolean(),
+  "isFeatured": zod.boolean(),
+  "imageUrl": zod.string().nullish(),
+  "stock": zod.number(),
+  "rating": zod.number(),
+  "reviewCount": zod.number(),
+  "badges": zod.array(zod.string()).optional(),
+  "freshnessScore": zod.number()
+})
+
+
+/**
+ * @summary Update order status (admin)
+ */
+export const AdminUpdateOrderStatusParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminUpdateOrderStatusBody = zod.object({
+  "status": zod.enum(['pending', 'confirmed', 'out_for_delivery', 'delivered', 'cancelled'])
+})
+
+export const AdminUpdateOrderStatusResponse = zod.object({
+  "id": zod.number(),
+  "items": zod.array(zod.object({
+  "productId": zod.number(),
+  "productName": zod.string(),
+  "quantity": zod.number(),
+  "price": zod.number(),
+  "unit": zod.string(),
+  "imageUrl": zod.string().nullish()
+})),
+  "total": zod.number(),
+  "status": zod.enum(['pending', 'confirmed', 'out_for_delivery', 'delivered', 'cancelled']),
+  "deliveryDate": zod.string().nullish(),
+  "deliveryAddress": zod.string().nullish(),
+  "customerName": zod.string().nullish(),
+  "customerPhone": zod.string().nullish(),
+  "createdAt": zod.string(),
+  "notes": zod.string().nullish(),
+  "paymentMethod": zod.string().nullish(),
+  "deliverySlot": zod.string().nullish()
 })
 
 

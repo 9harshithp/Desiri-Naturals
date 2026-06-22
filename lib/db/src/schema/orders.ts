@@ -13,6 +13,8 @@ export const ordersTable = pgTable("orders", {
   customerName: text("customer_name"),
   customerPhone: text("customer_phone"),
   notes: text("notes"),
+  paymentMethod: text("payment_method"),
+  deliverySlot: text("delivery_slot"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
