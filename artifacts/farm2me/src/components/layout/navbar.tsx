@@ -37,7 +37,7 @@ export function Navbar() {
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2">
               <Leaf className="h-6 w-6 text-primary" />
-              <span className="text-xl font-serif font-bold text-primary">Farm2Me</span>
+              <span className="text-xl font-serif font-bold text-primary">Desiri Naturals</span>
             </Link>
             <nav className="hidden md:flex gap-6">
               <Link href="/products" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
