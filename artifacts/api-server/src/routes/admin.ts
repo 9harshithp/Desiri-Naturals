@@ -58,6 +58,46 @@ router.get("/admin/stats", async (req, res): Promise<void> => {
   });
 });
 
+router.post("/admin/products", async (req, res): Promise<void> => {
+  if (!(await requireAdmin(req, res))) return;
+
+  const {
+    name, description, price, unit,
+    categorySlug, categoryName, farmId, farmName, farmLocation,
+    isOrganic, isSeasonal, isFeatured,
+    imageUrl, stock, freshnessScore, badges,
+  } = req.body;
+
+  if (!name || !price || !unit || !categorySlug || !categoryName || !farmId || !farmName) {
+    res.status(400).json({ error: "name, price, unit, category and farm are required" });
+    return;
+  }
+
+  const [product] = await db
+    .insert(productsTable)
+    .values({
+      name,
+      description: description || null,
+      price: String(price),
+      unit,
+      categorySlug,
+      categoryName,
+      farmId: parseInt(farmId),
+      farmName,
+      farmLocation: farmLocation || null,
+      isOrganic: !!isOrganic,
+      isSeasonal: !!isSeasonal,
+      isFeatured: !!isFeatured,
+      imageUrl: imageUrl || null,
+      stock: parseInt(stock ?? "100"),
+      freshnessScore: parseInt(freshnessScore ?? "85"),
+      badges: badges || [],
+    })
+    .returning();
+
+  res.status(201).json(serializeProduct(product));
+});
+
 router.get("/admin/orders", async (req, res): Promise<void> => {
   if (!(await requireAdmin(req, res))) return;
 
@@ -78,12 +118,13 @@ router.patch("/admin/products/:id", async (req, res): Promise<void> => {
     return;
   }
 
-  const { price, stock, isFeatured, freshnessScore } = req.body;
+  const { price, stock, isFeatured, freshnessScore, imageUrl } = req.body;
   const updates: Record<string, unknown> = {};
   if (price !== undefined) updates.price = String(price);
   if (stock !== undefined) updates.stock = stock;
   if (isFeatured !== undefined) updates.isFeatured = isFeatured;
   if (freshnessScore !== undefined) updates.freshnessScore = freshnessScore;
+  if (imageUrl !== undefined) updates.imageUrl = imageUrl || null;
 
   const [updated] = await db
     .update(productsTable)
