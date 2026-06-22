@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { 
   useListProducts, 
@@ -26,15 +26,12 @@ export default function Products() {
   const [isSeasonal, setIsSeasonal] = useState(defaultSeasonal);
   const [sort, setSort] = useState<ListProductsSort | undefined>(undefined);
 
-  // Simple debounce for search
-  import("react").then((React) => {
-    React.useEffect(() => {
-      const timer = setTimeout(() => {
-        setDebouncedSearch(search);
-      }, 500);
-      return () => clearTimeout(timer);
-    }, [search]);
-  });
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [search]);
 
   const { data: categories } = useListCategories();
   const { data: products, isLoading } = useListProducts({
