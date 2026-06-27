@@ -21,8 +21,14 @@ const MARQUEE_ITEMS = [
   "Farm to Table",
 ];
 
-const CATEGORY_EMOJIS: Record<string, string> = {
-  vegetables: "🥬", fruits: "🍋", dairy: "🥛", oils: "🫙",
+const CATEGORY_IMAGES: Record<string, string> = {
+  vegetables: "/images/cat-vegetables.png",
+  fruits: "/images/cat-fruits.png",
+  dairy: "/images/cat-dairy.png",
+  oils: "/images/cat-oils.png",
+};
+
+const CATEGORY_ICONS: Record<string, string> = {
   grains: "🌾", herbs: "🌿", spices: "🌶️", honey: "🍯",
 };
 
@@ -140,17 +146,26 @@ export default function Home() {
             {/* Right — value tiles */}
             <div className="grid grid-cols-2 gap-4">
               {[
-                { icon: "🐂", title: "Bull-Powered", desc: "Traditional stone-pressed extraction preserving full nutrition" },
-                { icon: "🌿", title: "Chemical Free", desc: "Natural pest management, zero synthetic inputs on your food" },
-                { icon: "♻️", title: "Zero Waste", desc: "Plastic-free packaging, every part of the harvest is used" },
-                { icon: "👩‍🌾", title: "Women-Led", desc: "Empowering rural women farmers at every step of production" },
-                { icon: "🧪", title: "Lab Certified", desc: "In-house purity testing on every batch before it ships" },
-                { icon: "💧", title: "Water Smart", desc: "Traditional water conservation techniques on all partner farms" },
-              ].map(({ icon, title, desc }) => (
-                <div key={title} className="bg-muted/60 rounded-2xl p-5 border border-border/50 hover:border-[#C4602A]/30 hover:bg-[#C4602A]/5 transition-all group">
-                  <div className="text-2xl mb-3">{icon}</div>
-                  <h4 className="font-semibold text-foreground mb-1 text-sm">{title}</h4>
-                  <p className="text-muted-foreground text-xs leading-relaxed">{desc}</p>
+                { img: "/images/phil-bull-powered.png", title: "Bull-Powered", desc: "Traditional stone-pressed extraction preserving full nutrition" },
+                { img: "/images/phil-chemical-free.png", title: "Chemical Free", desc: "Natural pest management, zero synthetic inputs on your food" },
+                { img: "/images/phil-zero-waste.png", title: "Zero Waste", desc: "Plastic-free packaging, every part of the harvest is used" },
+                { img: "/images/phil-women-led.png", title: "Women-Led", desc: "Empowering rural women farmers at every step of production" },
+                { img: "/images/phil-lab-certified.png", title: "Lab Certified", desc: "In-house purity testing on every batch before it ships" },
+                { img: "/images/phil-water-smart.png", title: "Water Smart", desc: "Traditional water conservation techniques on all partner farms" },
+              ].map(({ img, title, desc }) => (
+                <div key={title} className="group rounded-2xl border border-border/50 hover:border-[#C4602A]/40 transition-all overflow-hidden bg-card">
+                  <div className="aspect-[3/2] w-full overflow-hidden bg-muted">
+                    <img
+                      src={img}
+                      alt={title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <h4 className="font-semibold text-foreground mb-1 text-sm">{title}</h4>
+                    <p className="text-muted-foreground text-xs leading-relaxed">{desc}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -172,22 +187,31 @@ export default function Home() {
           </div>
         </div>
         <div className="flex gap-4 px-6 lg:px-8 overflow-x-auto pb-2 scrollbar-none">
-          {categories?.map((category) => (
-            <Link
-              key={category.id}
-              href={`/products?category=${category.slug}`}
-              className="group flex-shrink-0 flex flex-col items-center gap-4 w-36"
-            >
-              <div className="w-36 h-36 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center text-4xl group-hover:bg-[#C4602A]/20 group-hover:border-[#C4602A]/40 transition-all overflow-hidden">
-                {category.imageUrl ? (
-                  <img src={category.imageUrl} alt={category.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                ) : (
-                  <span>{CATEGORY_EMOJIS[category.slug] ?? "🌾"}</span>
-                )}
-              </div>
-              <span className="text-white/80 text-sm font-medium text-center group-hover:text-white transition-colors">{category.name}</span>
-            </Link>
-          ))}
+          {categories?.map((category) => {
+            const imgSrc = category.imageUrl || CATEGORY_IMAGES[category.slug];
+            const fallbackIcon = CATEGORY_ICONS[category.slug] ?? "🌾";
+            return (
+              <Link
+                key={category.id}
+                href={`/products?category=${category.slug}`}
+                className="group flex-shrink-0 flex flex-col items-center gap-4 w-36"
+              >
+                <div className="w-36 h-36 rounded-2xl bg-white/10 border border-white/10 group-hover:border-[#C4602A]/50 transition-all overflow-hidden relative">
+                  {imgSrc ? (
+                    <>
+                      <img src={imgSrc} alt={category.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+                    </>
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-4xl bg-white/5 group-hover:bg-[#C4602A]/20 transition-colors">
+                      {fallbackIcon}
+                    </div>
+                  )}
+                </div>
+                <span className="text-white/80 text-sm font-medium text-center group-hover:text-white transition-colors">{category.name}</span>
+              </Link>
+            );
+          })}
         </div>
       </section>
 

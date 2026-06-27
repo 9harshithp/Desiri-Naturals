@@ -48,3 +48,63 @@ id = "VfBbWWsMHbwOPvikGaxuy"
 uri = "file://artifacts/farm2me/public/images/farm-landscape.png"
 type = "image"
 title = "Indian farm landscape"
+
+[[generated]]
+id = "cmL8ZXCkxihXaXQ-FYncz"
+uri = "file://artifacts/farm2me/public/images/phil-bull-powered.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "RHJF3_kjTdYdbfF71-rQS"
+uri = "file://artifacts/farm2me/public/images/phil-chemical-free.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "V8umKf23_62r2I4zIGpw3"
+uri = "file://artifacts/farm2me/public/images/phil-zero-waste.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "Dq8dRiki6YDbpK62Ud-NQ"
+uri = "file://artifacts/farm2me/public/images/phil-women-led.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "dfurMo43bOid6sDleGkJx"
+uri = "file://artifacts/farm2me/public/images/phil-lab-certified.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "TEd4iloSwlbz6QzQI-IYU"
+uri = "file://artifacts/farm2me/public/images/phil-water-smart.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "oLtHZ79YU1L0i2msLkmlw"
+uri = "file://artifacts/farm2me/public/images/cat-vegetables.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "4dKCYBwLL4a_a21GuqE-q"
+uri = "file://artifacts/farm2me/public/images/cat-fruits.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "QDSr-IR76-z63CwZNn3B_"
+uri = "file://artifacts/farm2me/public/images/cat-dairy.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "Rei5PrulxbpKKIpvYLnpQ"
+uri = "file://artifacts/farm2me/public/images/cat-oils.png"
+type = "image"
+title = "generated_image"
