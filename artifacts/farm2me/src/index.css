@@ -52,61 +52,73 @@
 }
 
 :root {
-  --background: 40 30% 98%;
-  --foreground: 142 50% 15%;
-  --border: 40 20% 85%;
+  /* Warm cream base */
+  --background: 36 35% 97%;
+  --foreground: 20 45% 10%;
+  --border: 34 25% 84%;
   --card: 0 0% 100%;
-  --card-foreground: 142 50% 15%;
-  --card-border: 40 20% 85%;
-  
+  --card-foreground: 20 45% 10%;
+  --card-border: 34 25% 88%;
+
   --popover: 0 0% 100%;
-  --popover-foreground: 142 50% 15%;
-  --popover-border: 40 20% 85%;
+  --popover-foreground: 20 45% 10%;
+  --popover-border: 34 25% 84%;
 
-  --primary: 142 40% 30%;
-  --primary-foreground: 40 30% 98%;
-  --secondary: 24 70% 50%;
+  /* Deep forest green */
+  --primary: 152 45% 22%;
+  --primary-foreground: 36 35% 97%;
+  --primary-border: hsl(152 45% 30%);
+
+  /* Warm terracotta */
+  --secondary: 18 68% 48%;
   --secondary-foreground: 0 0% 100%;
+  --secondary-border: hsl(18 68% 56%);
 
-  --muted: 40 20% 90%;
-  --muted-foreground: 142 30% 40%;
-  --accent: 40 20% 90%;
-  --accent-foreground: 142 50% 15%;
-  --destructive: 0 80% 50%;
+  /* Warm sand */
+  --muted: 36 28% 90%;
+  --muted-foreground: 20 30% 42%;
+  --muted-border: hsl(36 28% 82%);
+
+  --accent: 36 50% 88%;
+  --accent-foreground: 20 45% 10%;
+  --accent-border: hsl(36 50% 80%);
+
+  --destructive: 0 72% 48%;
   --destructive-foreground: 0 0% 100%;
-  
-  --input: 40 20% 85%;
-  --ring: 142 40% 30%;
+  --destructive-border: hsl(0 72% 56%);
 
-  --radius: 0.5rem;
+  --input: 34 25% 86%;
+  --ring: 152 45% 22%;
+
+  --radius: 0.625rem;
 }
 
 .dark {
-  --background: 142 50% 10%;
-  --foreground: 40 30% 98%;
-  --border: 142 30% 25%;
-  --card: 142 50% 12%;
-  --card-foreground: 40 30% 98%;
-  --card-border: 142 30% 25%;
-  
-  --popover: 142 50% 12%;
-  --popover-foreground: 40 30% 98%;
-  --popover-border: 142 30% 25%;
+  --background: 20 30% 8%;
+  --foreground: 36 35% 95%;
+  --border: 20 25% 18%;
+  --card: 20 30% 10%;
+  --card-foreground: 36 35% 95%;
+  --card-border: 20 25% 18%;
 
-  --primary: 142 40% 40%;
-  --primary-foreground: 142 50% 10%;
-  --secondary: 24 70% 50%;
+  --popover: 20 30% 10%;
+  --popover-foreground: 36 35% 95%;
+  --popover-border: 20 25% 18%;
+
+  --primary: 152 38% 38%;
+  --primary-foreground: 20 30% 8%;
+  --secondary: 18 68% 52%;
   --secondary-foreground: 0 0% 100%;
 
-  --muted: 142 30% 20%;
-  --muted-foreground: 40 20% 80%;
-  --accent: 142 30% 20%;
-  --accent-foreground: 40 30% 98%;
-  --destructive: 0 80% 50%;
+  --muted: 20 25% 15%;
+  --muted-foreground: 36 20% 65%;
+  --accent: 20 25% 15%;
+  --accent-foreground: 36 35% 95%;
+  --destructive: 0 72% 48%;
   --destructive-foreground: 0 0% 100%;
-  
-  --input: 142 30% 25%;
-  --ring: 142 40% 40%;
+
+  --input: 20 25% 18%;
+  --ring: 152 38% 38%;
 }
 
 @layer base {
@@ -120,3 +132,27 @@
     @apply font-serif;
   }
 }
+
+/* ── Marquee ─────────────────────────────────────── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+  will-change: transform;
+}
+
+/* ── Grain texture overlay ───────────────────────── */
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 1;
+}
+
+/* ── Smooth scroll ───────────────────────────────── */
+html { scroll-behavior: smooth; }

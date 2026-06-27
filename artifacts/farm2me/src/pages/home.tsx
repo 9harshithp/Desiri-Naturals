@@ -2,14 +2,29 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ProductCard } from "@/components/ProductCard";
-import { ArrowRight, Leaf, ShieldCheck, Clock, MapPin, Search, Truck } from "lucide-react";
-import { 
-  useListFeaturedProducts, 
-  useListCategories, 
+import { ArrowRight, Leaf, ShieldCheck, Clock, MapPin, Zap, Users, Recycle } from "lucide-react";
+import {
+  useListFeaturedProducts,
+  useListCategories,
   useGetDiscoverSummary,
-  useListFarms
+  useListFarms,
 } from "@workspace/api-client-react";
-import { Input } from "@/components/ui/input";
+
+const MARQUEE_ITEMS = [
+  "Bull-Powered Extraction",
+  "Chemical Free",
+  "Traditional Methods",
+  "Purity Certified",
+  "Plastic Free",
+  "Zero Waste",
+  "Women Empowered",
+  "Farm to Table",
+];
+
+const CATEGORY_EMOJIS: Record<string, string> = {
+  vegetables: "🥬", fruits: "🍋", dairy: "🥛", oils: "🫙",
+  grains: "🌾", herbs: "🌿", spices: "🌶️", honey: "🍯",
+};
 
 export default function Home() {
   const { data: featuredProducts } = useListFeaturedProducts();
@@ -17,107 +32,179 @@ export default function Home() {
   const { data: summary } = useGetDiscoverSummary();
   const { data: farms } = useListFarms();
 
+  const marqueeText = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
+
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Hero Section */}
-      <section className="relative w-full h-[80vh] min-h-[600px] flex items-center bg-muted overflow-hidden">
+    <div className="flex flex-col min-h-screen overflow-x-hidden">
+
+      {/* ── HERO ─────────────────────────────────────────────── */}
+      <section className="relative w-full min-h-[92vh] flex items-end bg-[#111008] overflow-hidden">
+        {/* Background image */}
         <div className="absolute inset-0">
-          <img 
-            src="/images/hero.png" 
-            alt="Fresh farm produce" 
-            className="w-full h-full object-cover object-center"
+          <img
+            src="/images/hero.png"
+            alt="Fresh produce"
+            className="w-full h-full object-cover object-center opacity-55"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#111008] via-[#111008]/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#111008]/80 via-transparent to-transparent" />
         </div>
-        
-        <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl">
-            <Badge variant="outline" className="mb-4 bg-background/50 backdrop-blur border-primary text-primary px-3 py-1">
-              Farm-to-table delivery in India
-            </Badge>
-            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground leading-[1.1] mb-6">
-              Real food, grown by real people.
+
+        {/* Floating pill — top right */}
+        <div className="absolute top-8 right-8 hidden lg:flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 text-white text-sm font-medium">
+          <span className="h-2 w-2 rounded-full bg-green-400 animate-pulse" />
+          Harvested fresh this morning
+        </div>
+
+        <div className="relative container mx-auto px-6 lg:px-8 pb-20 pt-32">
+          <div className="max-w-4xl">
+            {/* Eyebrow */}
+            <div className="flex items-center gap-2 mb-6">
+              <div className="h-px w-10 bg-[#C4602A]" />
+              <span className="text-[#C4602A] text-sm font-semibold tracking-widest uppercase">Desiri Naturals</span>
+            </div>
+
+            {/* Main headline */}
+            <h1 className="font-serif text-[clamp(3rem,8vw,7rem)] font-bold leading-[0.95] tracking-tight text-white mb-8">
+              Towards<br />
+              <em className="not-italic text-[#e8c97e]">Chemical-free</em><br />
+              Food Plates.
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl">
-              Trace every tomato back to the farm it grew on. We connect conscious consumers directly with local farmers for fresh, organic produce delivered within 24 hours of harvest.
+
+            <p className="text-white/65 text-lg md:text-xl max-w-xl mb-10 leading-relaxed">
+              Bull-powered extraction. Traditional farming. Zero compromise.
+              Real food for real people — delivered from farm to your door.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="rounded-full text-base px-8 h-14" asChild>
-                <Link href="/products">Shop Fresh Produce</Link>
+
+            <div className="flex flex-wrap gap-4">
+              <Button size="lg" className="rounded-full h-14 px-9 text-base bg-[#C4602A] hover:bg-[#a84e22] border-0 text-white" asChild>
+                <Link href="/products">Shop Now <ArrowRight className="ml-2 h-4 w-4" /></Link>
               </Button>
-              <Button size="lg" variant="outline" className="rounded-full text-base px-8 h-14 bg-background/50 backdrop-blur" asChild>
-                <Link href="/farms">Meet Our Farmers</Link>
+              <Button size="lg" variant="outline" className="rounded-full h-14 px-9 text-base bg-white/10 backdrop-blur border-white/30 text-white hover:bg-white/20 hover:text-white" asChild>
+                <Link href="/farms">Our Story</Link>
               </Button>
             </div>
-            
-            {summary && (
-              <div className="mt-12 flex items-center gap-8 text-sm font-medium">
-                <div className="flex flex-col">
-                  <span className="text-3xl font-serif font-bold text-primary">{summary.totalFarms}+</span>
-                  <span className="text-muted-foreground">Partner Farms</span>
+          </div>
+
+          {/* Stat strip */}
+          {summary && (
+            <div className="mt-20 flex flex-wrap gap-x-12 gap-y-6">
+              {[
+                { val: `${summary.totalFarms}+`, label: "Partner Farms" },
+                { val: `${summary.organicPercentage}%`, label: "Chemical Free" },
+                { val: `<${summary.avgDeliveryHours}h`, label: "Farm to Door" },
+              ].map(({ val, label }) => (
+                <div key={label} className="flex flex-col gap-0.5">
+                  <span className="font-serif text-4xl font-bold text-[#e8c97e]">{val}</span>
+                  <span className="text-white/50 text-sm tracking-wide uppercase">{label}</span>
                 </div>
-                <div className="h-10 w-px bg-border"></div>
-                <div className="flex flex-col">
-                  <span className="text-3xl font-serif font-bold text-secondary">{summary.organicPercentage}%</span>
-                  <span className="text-muted-foreground">Organic Certified</span>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ── MARQUEE ──────────────────────────────────────────── */}
+      <div className="bg-[#C4602A] py-3.5 overflow-hidden flex">
+        <div className="flex gap-12 animate-marquee whitespace-nowrap">
+          {marqueeText.map((item, i) => (
+            <span key={i} className="inline-flex items-center gap-3 text-white font-semibold text-sm tracking-widest uppercase shrink-0">
+              <span className="h-1.5 w-1.5 rounded-full bg-white/60" />
+              {item}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* ── BRAND STORY ──────────────────────────────────────── */}
+      <section className="py-28 bg-background">
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left — text */}
+            <div>
+              <p className="text-[#C4602A] text-sm font-semibold tracking-widest uppercase mb-6">Our Philosophy</p>
+              <h2 className="font-serif text-5xl md:text-6xl font-bold leading-[1.1] mb-8 text-foreground">
+                Real food<br />shouldn't have<br />shortcuts.
+              </h2>
+              <p className="text-muted-foreground text-lg leading-relaxed mb-6">
+                We use traditional bull-powered oil extraction — the same method our ancestors used for centuries — to preserve every nutrient, every flavour, every drop of purity. No heat, no chemicals, no compromise.
+              </p>
+              <p className="text-muted-foreground text-lg leading-relaxed mb-10">
+                Our model creates self-sustaining rural communities, empowers women farmers, preserves native Indian bull breeds, and ensures fair prices at every step.
+              </p>
+              <Link href="/farms" className="inline-flex items-center gap-2 text-foreground font-semibold text-base border-b-2 border-[#C4602A] pb-0.5 hover:text-[#C4602A] transition-colors">
+                Meet our farmers <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+
+            {/* Right — value tiles */}
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { icon: "🐂", title: "Bull-Powered", desc: "Traditional stone-pressed extraction preserving full nutrition" },
+                { icon: "🌿", title: "Chemical Free", desc: "Natural pest management, zero synthetic inputs on your food" },
+                { icon: "♻️", title: "Zero Waste", desc: "Plastic-free packaging, every part of the harvest is used" },
+                { icon: "👩‍🌾", title: "Women-Led", desc: "Empowering rural women farmers at every step of production" },
+                { icon: "🧪", title: "Lab Certified", desc: "In-house purity testing on every batch before it ships" },
+                { icon: "💧", title: "Water Smart", desc: "Traditional water conservation techniques on all partner farms" },
+              ].map(({ icon, title, desc }) => (
+                <div key={title} className="bg-muted/60 rounded-2xl p-5 border border-border/50 hover:border-[#C4602A]/30 hover:bg-[#C4602A]/5 transition-all group">
+                  <div className="text-2xl mb-3">{icon}</div>
+                  <h4 className="font-semibold text-foreground mb-1 text-sm">{title}</h4>
+                  <p className="text-muted-foreground text-xs leading-relaxed">{desc}</p>
                 </div>
-                <div className="h-10 w-px bg-border"></div>
-                <div className="flex flex-col">
-                  <span className="text-3xl font-serif font-bold text-foreground">&lt; {summary.avgDeliveryHours}h</span>
-                  <span className="text-muted-foreground">Harvest to Home</span>
-                </div>
-              </div>
-            )}
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Categories Strip */}
-      <section className="py-12 border-b bg-background">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="font-serif text-2xl font-bold">Shop by Category</h2>
-            <Link href="/products" className="text-sm font-medium text-primary flex items-center gap-1 hover:underline">
+      {/* ── CATEGORIES ───────────────────────────────────────── */}
+      <section className="py-20 bg-[#1B2E1F] overflow-hidden">
+        <div className="container mx-auto px-6 lg:px-8 mb-10">
+          <div className="flex items-end justify-between">
+            <div>
+              <p className="text-[#C4602A] text-sm font-semibold tracking-widest uppercase mb-3">Browse</p>
+              <h2 className="font-serif text-4xl md:text-5xl font-bold text-white">Shop by category</h2>
+            </div>
+            <Link href="/products" className="hidden md:flex items-center gap-2 text-white/60 hover:text-white font-medium transition-colors text-sm">
               View all <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {categories?.slice(0, 6).map((category) => (
-              <Link 
-                key={category.id} 
-                href={`/products?category=${category.slug}`}
-                className="group flex flex-col items-center gap-3 p-4 rounded-2xl border bg-card hover:border-primary transition-colors text-center"
-              >
-                <div className="w-16 h-16 rounded-full bg-muted overflow-hidden">
-                  {category.imageUrl ? (
-                    <img src={category.imageUrl} alt={category.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-secondary/20">
-                      <Leaf className="h-8 w-8 text-secondary/60" />
-                    </div>
-                  )}
-                </div>
-                <span className="font-medium">{category.name}</span>
-              </Link>
-            ))}
-          </div>
+        </div>
+        <div className="flex gap-4 px-6 lg:px-8 overflow-x-auto pb-2 scrollbar-none">
+          {categories?.map((category) => (
+            <Link
+              key={category.id}
+              href={`/products?category=${category.slug}`}
+              className="group flex-shrink-0 flex flex-col items-center gap-4 w-36"
+            >
+              <div className="w-36 h-36 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center text-4xl group-hover:bg-[#C4602A]/20 group-hover:border-[#C4602A]/40 transition-all overflow-hidden">
+                {category.imageUrl ? (
+                  <img src={category.imageUrl} alt={category.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                ) : (
+                  <span>{CATEGORY_EMOJIS[category.slug] ?? "🌾"}</span>
+                )}
+              </div>
+              <span className="text-white/80 text-sm font-medium text-center group-hover:text-white transition-colors">{category.name}</span>
+            </Link>
+          ))}
         </div>
       </section>
 
-      {/* Featured Products */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-            <div className="max-w-2xl">
-              <h2 className="font-serif text-3xl md:text-4xl font-bold mb-4">Fresh from the fields</h2>
-              <p className="text-muted-foreground text-lg">Hand-picked by our farmers this morning. Ready for your kitchen tomorrow.</p>
+      {/* ── FEATURED PRODUCTS ────────────────────────────────── */}
+      <section className="py-24 bg-background">
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6">
+            <div>
+              <p className="text-[#C4602A] text-sm font-semibold tracking-widest uppercase mb-3">Today's Pick</p>
+              <h2 className="font-serif text-4xl md:text-5xl font-bold">Fresh from the fields</h2>
+              <p className="text-muted-foreground text-lg mt-3 max-w-md">Hand-picked this morning. Ready for your kitchen tomorrow.</p>
             </div>
-            <Button variant="outline" className="rounded-full shrink-0" asChild>
-              <Link href="/products">Shop all produce</Link>
+            <Button variant="outline" className="rounded-full shrink-0 h-12 px-7 border-foreground/30 hover:border-foreground" asChild>
+              <Link href="/products">View all produce <ArrowRight className="ml-2 h-4 w-4" /></Link>
             </Button>
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {featuredProducts?.slice(0, 8).map((product) => (
               <ProductCard key={product.id} product={product} />
@@ -126,144 +213,154 @@ export default function Home() {
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="py-20 bg-muted/50 border-y">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="font-serif text-3xl md:text-4xl font-bold mb-4">How Desiri Naturals works</h2>
-            <p className="text-muted-foreground text-lg">We've eliminated the middlemen so farmers earn more and you eat better.</p>
+      {/* ── HOW IT WORKS ─────────────────────────────────────── */}
+      <section className="py-28 bg-[#1B2E1F] relative overflow-hidden">
+        {/* Decorative circle */}
+        <div className="absolute -right-32 -top-32 w-96 h-96 rounded-full border border-white/5" />
+        <div className="absolute -right-16 -top-16 w-64 h-64 rounded-full border border-white/5" />
+
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="max-w-xl mb-16">
+            <p className="text-[#C4602A] text-sm font-semibold tracking-widest uppercase mb-4">The Process</p>
+            <h2 className="font-serif text-4xl md:text-5xl font-bold text-white leading-tight">
+              How Desiri<br />Naturals works
+            </h2>
           </div>
-          
-          <div className="grid md:grid-cols-3 gap-12 relative">
-            <div className="hidden md:block absolute top-12 left-1/6 right-1/6 h-0.5 bg-border -z-10" />
-            
-            <div className="flex flex-col items-center text-center">
-              <div className="w-24 h-24 rounded-full bg-background border shadow-sm flex items-center justify-center mb-6 text-primary">
-                <Search className="h-10 w-10" />
+
+          <div className="grid md:grid-cols-3 gap-12">
+            {[
+              { n: "01", title: "You Order", body: "Browse and order from our range of traditional, pure products. Place your order by 8 PM for next-day delivery." },
+              { n: "02", title: "Farmers Produce", body: "Our partner farmers harvest or press your order in the early morning using bull-powered, traditional methods." },
+              { n: "03", title: "We Deliver", body: "Your order arrives at your door in eco-friendly, plastic-free packaging — fresh, pure, and fully traceable." },
+            ].map(({ n, title, body }) => (
+              <div key={n} className="relative">
+                <div className="font-serif text-8xl font-bold text-white/5 absolute -top-6 -left-2 select-none">{n}</div>
+                <div className="relative">
+                  <div className="text-[#e8c97e] font-mono text-sm font-bold mb-4">{n}</div>
+                  <h3 className="font-serif text-2xl font-bold text-white mb-3">{title}</h3>
+                  <p className="text-white/55 leading-relaxed">{body}</p>
+                </div>
               </div>
-              <h3 className="font-serif text-xl font-bold mb-2">1. You Choose</h3>
-              <p className="text-muted-foreground">Browse fresh produce from local Indian farms. Order by 8 PM for next-day delivery.</p>
-            </div>
-            
-            <div className="flex flex-col items-center text-center">
-              <div className="w-24 h-24 rounded-full bg-background border shadow-sm flex items-center justify-center mb-6 text-secondary">
-                <Leaf className="h-10 w-10" />
-              </div>
-              <h3 className="font-serif text-xl font-bold mb-2">2. Farmers Harvest</h3>
-              <p className="text-muted-foreground">Our partner farmers harvest your order early morning, ensuring peak freshness.</p>
-            </div>
-            
-            <div className="flex flex-col items-center text-center">
-              <div className="w-24 h-24 rounded-full bg-background border shadow-sm flex items-center justify-center mb-6 text-foreground">
-                <Truck className="h-10 w-10" />
-              </div>
-              <h3 className="font-serif text-xl font-bold mb-2">3. We Deliver</h3>
-              <p className="text-muted-foreground">Your produce is delivered straight to your door in eco-friendly packaging.</p>
-            </div>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <div className="mt-16 pt-16 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+            <p className="text-white/60 max-w-lg">Eliminate the middlemen. Farmers earn more. You eat better. Everyone wins.</p>
+            <Button className="rounded-full h-12 px-8 bg-[#C4602A] hover:bg-[#a84e22] border-0 text-white shrink-0" asChild>
+              <Link href="/products">Start Shopping</Link>
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* Trust Badges */}
-      <section className="py-12 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      {/* ── TRUST BAR ────────────────────────────────────────── */}
+      <section className="py-16 bg-[#e8c97e]/20 border-y border-[#e8c97e]/30">
+        <div className="container mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div className="flex flex-col items-center gap-3">
-              <ShieldCheck className="h-8 w-8 text-secondary" />
-              <h4 className="font-bold">100% Traceable</h4>
-              <p className="text-sm text-primary-foreground/80">Know exactly where your food comes from</p>
-            </div>
-            <div className="flex flex-col items-center gap-3">
-              <Leaf className="h-8 w-8 text-secondary" />
-              <h4 className="font-bold">Organic Partners</h4>
-              <p className="text-sm text-primary-foreground/80">Certified pesticide-free farming</p>
-            </div>
-            <div className="flex flex-col items-center gap-3">
-              <Clock className="h-8 w-8 text-secondary" />
-              <h4 className="font-bold">24hr Farm-to-Home</h4>
-              <p className="text-sm text-primary-foreground/80">Harvested today, delivered tomorrow</p>
-            </div>
-            <div className="flex flex-col items-center gap-3">
-              <MapPin className="h-8 w-8 text-secondary" />
-              <h4 className="font-bold">Fair to Farmers</h4>
-              <p className="text-sm text-primary-foreground/80">Farmers set their own prices</p>
-            </div>
+            {[
+              { icon: ShieldCheck, title: "100% Traceable", desc: "Know exactly which farm your food came from" },
+              { icon: Leaf, title: "No Chemicals", desc: "Certified pesticide-free on every product" },
+              { icon: Clock, title: "24hr Farm-to-Home", desc: "Harvested today, at your door tomorrow" },
+              { icon: Users, title: "Fair to Farmers", desc: "Farmers set prices, keep 80% of revenue" },
+            ].map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="flex flex-col items-center gap-3">
+                <div className="h-11 w-11 rounded-full bg-[#1B2E1F] flex items-center justify-center">
+                  <Icon className="h-5 w-5 text-[#e8c97e]" />
+                </div>
+                <h4 className="font-semibold text-foreground text-sm">{title}</h4>
+                <p className="text-muted-foreground text-xs leading-relaxed max-w-[160px]">{desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Subscription CTA */}
-      <section className="py-24 bg-background">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="rounded-3xl overflow-hidden bg-muted flex flex-col lg:flex-row relative">
-            <div className="absolute inset-0 bg-secondary/10 lg:w-1/2" />
-            <div className="w-full lg:w-1/2 p-8 md:p-16 relative z-10 flex flex-col justify-center">
-              <Badge className="w-fit mb-6 bg-secondary text-secondary-foreground hover:bg-secondary">
-                Desiri Naturals Boxes
-              </Badge>
-              <h2 className="font-serif text-3xl md:text-5xl font-bold mb-6 text-foreground">
-                Let the seasons decide your menu.
+      {/* ── FARM STORIES ─────────────────────────────────────── */}
+      {farms && farms.length > 0 && (
+        <section className="py-24 bg-background">
+          <div className="container mx-auto px-6 lg:px-8">
+            <div className="flex items-end justify-between mb-12">
+              <div>
+                <p className="text-[#C4602A] text-sm font-semibold tracking-widest uppercase mb-3">Our Partners</p>
+                <h2 className="font-serif text-4xl md:text-5xl font-bold">Behind every product,<br />a real farm.</h2>
+              </div>
+              <Link href="/farms" className="hidden md:flex items-center gap-2 text-muted-foreground hover:text-foreground font-medium transition-colors text-sm">
+                All farms <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {farms.slice(0, 3).map((farm) => (
+                <Link key={farm.id} href={`/farms/${farm.id}`} className="group relative rounded-2xl overflow-hidden aspect-[4/5] bg-muted border border-border hover:border-[#C4602A]/40 transition-all">
+                  {farm.imageUrl ? (
+                    <img src={farm.imageUrl} alt={farm.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-[#1B2E1F] to-[#2d4a34] flex items-center justify-center">
+                      <Leaf className="h-16 w-16 text-white/20" />
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <Badge className="mb-3 bg-[#C4602A]/90 text-white border-0 text-xs">Partner Farm</Badge>
+                    <h3 className="font-serif text-xl font-bold text-white mb-1">{farm.name}</h3>
+                    <p className="text-white/60 text-sm flex items-center gap-1.5">
+                      <MapPin className="h-3.5 w-3.5" /> {farm.location}{farm.state ? `, ${farm.state}` : ""}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── SUBSCRIPTION CTA ─────────────────────────────────── */}
+      <section className="py-0 bg-[#1B2E1F] relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-[#e8c97e]" />
+        </div>
+        <div className="relative container mx-auto px-6 lg:px-8 py-28">
+          <div className="grid lg:grid-cols-[1fr_auto] gap-16 items-center">
+            <div>
+              <p className="text-[#C4602A] text-sm font-semibold tracking-widest uppercase mb-6">Subscription Boxes</p>
+              <h2 className="font-serif text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
+                Let the seasons<br />decide your menu.
               </h2>
-              <p className="text-lg text-muted-foreground mb-8">
-                Subscribe to our curated weekly or bi-weekly farm boxes. Get a seasonal mix of fresh vegetables, fruits, and greens delivered automatically.
+              <p className="text-white/55 text-lg mb-10 max-w-lg leading-relaxed">
+                Curated weekly boxes of the freshest seasonal produce — delivered automatically, skippable anytime. Save up to 15% on every order.
               </p>
-              <ul className="space-y-4 mb-8">
-                <li className="flex items-center gap-3">
-                  <div className="rounded-full bg-secondary/20 p-1">
-                    <Check className="h-4 w-4 text-secondary" />
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button size="lg" className="rounded-full h-14 px-9 text-base bg-[#e8c97e] hover:bg-[#d4b566] text-[#1B2E1F] border-0 font-bold" asChild>
+                  <Link href="/boxes">Explore Boxes <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                </Button>
+              </div>
+              <div className="mt-10 flex flex-wrap gap-x-10 gap-y-4">
+                {["Save up to 15%", "Skip or cancel anytime", "Eco-friendly packaging"].map((f) => (
+                  <div key={f} className="flex items-center gap-2 text-white/60 text-sm">
+                    <div className="h-1.5 w-1.5 rounded-full bg-[#e8c97e]" />
+                    {f}
                   </div>
-                  <span>Save up to 15% compared to individual items</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <div className="rounded-full bg-secondary/20 p-1">
-                    <Check className="h-4 w-4 text-secondary" />
-                  </div>
-                  <span>Customize what goes in your box</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <div className="rounded-full bg-secondary/20 p-1">
-                    <Check className="h-4 w-4 text-secondary" />
-                  </div>
-                  <span>Pause or cancel anytime</span>
-                </li>
-              </ul>
-              <Button size="lg" className="rounded-full w-fit h-14 px-8 text-base" asChild>
-                <Link href="/boxes">Explore Subscription Boxes</Link>
-              </Button>
+                ))}
+              </div>
             </div>
-            <div className="w-full lg:w-1/2 h-[400px] lg:h-auto relative">
-              <img 
-                src="/images/box.png" 
-                alt="Desiri Naturals Subscription Box" 
-                className="w-full h-full object-cover"
-              />
+            <div className="hidden lg:flex flex-col gap-4 shrink-0">
+              {[
+                { name: "Harvest Box", price: "₹499/wk", items: "8–10 seasonal items" },
+                { name: "Family Feast", price: "₹799/wk", items: "14–16 seasonal items" },
+                { name: "Oils & Grains", price: "₹649/mo", items: "Cold-pressed oils + grains" },
+              ].map(({ name, price, items }) => (
+                <div key={name} className="bg-white/8 border border-white/12 rounded-2xl px-6 py-4 w-64">
+                  <div className="font-semibold text-white mb-0.5">{name}</div>
+                  <div className="text-[#e8c97e] font-bold">{price}</div>
+                  <div className="text-white/50 text-xs mt-1">{items}</div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
+
     </div>
-  );
-}
-
-function HomeBadge({ children, className, variant, ...props }: any) {
-  return <div className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${className}`} {...props}>{children}</div>;
-}
-
-function Check(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
   );
 }
