@@ -11,7 +11,7 @@ export default function Boxes() {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div className="text-center max-w-3xl mx-auto mb-16">
-        <Badge variant="outline" className="mb-4 text-secondary border-secondary/30 bg-secondary/5">Farm2Me Subscriptions</Badge>
+        <Badge variant="outline" className="mb-4 text-secondary border-secondary/30 bg-secondary/5">Desiri Naturals Subscriptions</Badge>
         <h1 className="font-serif text-4xl md:text-5xl font-bold mb-6">Fresh harvests, delivered regularly.</h1>
         <p className="text-lg text-muted-foreground">
           Let the seasons dictate your menu. Subscribe to our farm boxes to get a curated selection of the freshest produce delivered to your door. Skip or cancel anytime.

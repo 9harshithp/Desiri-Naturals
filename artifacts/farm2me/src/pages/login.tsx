@@ -57,7 +57,7 @@ export default function Login() {
         <div className="relative z-10 text-white text-center max-w-md">
           <div className="flex items-center justify-center gap-3 mb-12">
             <Leaf className="h-10 w-10 text-[#8bc34a]" />
-            <span className="font-serif text-4xl font-bold">Farm2Me</span>
+            <span className="font-serif text-4xl font-bold">Desiri Naturals</span>
           </div>
           <p className="text-2xl font-serif font-medium leading-relaxed text-white/90 mb-8">
             Real food, grown by real people.
@@ -82,7 +82,7 @@ export default function Login() {
         <div className="w-full max-w-md">
           <div className="flex items-center gap-2 mb-10 lg:hidden">
             <Leaf className="h-6 w-6 text-primary" />
-            <span className="font-serif text-2xl font-bold">Farm2Me</span>
+            <span className="font-serif text-2xl font-bold">Desiri Naturals</span>
           </div>
 
           <h1 className="font-serif text-3xl font-bold mb-2">Welcome back</h1>

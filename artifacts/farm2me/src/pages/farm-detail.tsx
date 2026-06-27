@@ -46,7 +46,7 @@ export default function FarmDetail({ params }: { params: { id: string } }) {
             <div className="flex flex-wrap items-center text-white/90 gap-6 text-sm font-medium">
               <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4 text-secondary" /> {farm.location}{farm.state ? `, ${farm.state}` : ''}</span>
               <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4 text-secondary" /> Established {farm.established}</span>
-              <span className="flex items-center gap-1.5"><Award className="h-4 w-4 text-secondary" /> Farm2Me Partner</span>
+              <span className="flex items-center gap-1.5"><Award className="h-4 w-4 text-secondary" /> Desiri Naturals Partner</span>
             </div>
           </div>
         </div>

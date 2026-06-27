@@ -9,7 +9,7 @@ export function Footer() {
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center gap-2">
               <Leaf className="h-6 w-6 text-primary" />
-              <span className="text-xl font-serif font-bold text-primary">Farm2Me</span>
+              <span className="text-xl font-serif font-bold text-primary">Desiri Naturals</span>
             </Link>
             <p className="mt-4 max-w-xs text-sm text-muted-foreground leading-relaxed">
               Connecting conscious consumers directly with local farmers. Real food, grown by real people.
@@ -49,7 +49,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-12 border-t pt-8 text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} Farm2Me. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Desiri Naturals. All rights reserved.</p>
         </div>
       </div>
     </footer>

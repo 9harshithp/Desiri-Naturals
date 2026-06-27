@@ -130,7 +130,7 @@ export default function Home() {
       <section className="py-20 bg-muted/50 border-y">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="font-serif text-3xl md:text-4xl font-bold mb-4">How Farm2Me works</h2>
+            <h2 className="font-serif text-3xl md:text-4xl font-bold mb-4">How Desiri Naturals works</h2>
             <p className="text-muted-foreground text-lg">We've eliminated the middlemen so farmers earn more and you eat better.</p>
           </div>
           
@@ -199,7 +199,7 @@ export default function Home() {
             <div className="absolute inset-0 bg-secondary/10 lg:w-1/2" />
             <div className="w-full lg:w-1/2 p-8 md:p-16 relative z-10 flex flex-col justify-center">
               <Badge className="w-fit mb-6 bg-secondary text-secondary-foreground hover:bg-secondary">
-                Farm2Me Boxes
+                Desiri Naturals Boxes
               </Badge>
               <h2 className="font-serif text-3xl md:text-5xl font-bold mb-6 text-foreground">
                 Let the seasons decide your menu.
@@ -234,7 +234,7 @@ export default function Home() {
             <div className="w-full lg:w-1/2 h-[400px] lg:h-auto relative">
               <img 
                 src="/images/box.png" 
-                alt="Farm2Me Subscription Box" 
+                alt="Desiri Naturals Subscription Box" 
                 className="w-full h-full object-cover"
               />
             </div>
