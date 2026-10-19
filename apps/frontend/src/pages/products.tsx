@@ -203,7 +203,7 @@ export default function Products() {
       </div>
 
       {/* ── MAIN PRODUCT FLASHCARD GRID (Matching Image 1) ────────── */}
-      {isLoading ? (
+      {isLoading && displayedProducts.length === 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
             <div key={i} className="flex flex-col rounded-2xl border bg-card overflow-hidden p-4 space-y-4">
