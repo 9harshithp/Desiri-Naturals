@@ -299,6 +299,17 @@ async function parseSuccessBody(
     return null;
   }
 
+  const mediaType = getMediaType(response.headers);
+  if (mediaType === "text/html") {
+    const raw = await response.text();
+    throw new ResponseParseError(
+      response,
+      raw,
+      new Error(`Expected JSON response from ${requestInfo.method} ${requestInfo.url}, but received text/html (SPA fallback or unhandled route).`),
+      requestInfo,
+    );
+  }
+
   const effectiveType =
     responseType === "auto" ? inferResponseType(response) : responseType;
 

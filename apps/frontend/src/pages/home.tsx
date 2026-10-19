@@ -32,11 +32,82 @@ const CATEGORY_ICONS: Record<string, string> = {
   grains: "🌾", herbs: "🌿", spices: "🌶️", honey: "🍯",
 };
 
+const DEFAULT_CATEGORIES = [
+  { id: 1, name: "Bull-Driven Oils", slug: "oils", imageUrl: "/images/cat-oils.png" },
+  { id: 2, name: "A2 Desi Ghee", slug: "gau-products", imageUrl: "/images/cat-dairy.png" },
+  { id: 3, name: "Millets & Grains", slug: "millets", imageUrl: "/images/cat-vegetables.png" },
+  { id: 4, name: "Natural Sweeteners", slug: "sweetener", imageUrl: "/images/cat-fruits.png" },
+  { id: 5, name: "Pure Spices", slug: "spices", imageUrl: "/images/cat-vegetables.png" },
+];
+
+const DEFAULT_FEATURED = [
+  {
+    id: 1,
+    name: "Bull-Driven Groundnut Oil (Wood Pressed)",
+    slug: "bull-driven-groundnut-oil",
+    price: 380,
+    unit: "1 Litre Glass Bottle",
+    category: "oils",
+    description: "Cold-pressed using indigenous Kangayam bullocks at 2-3 RPM in wooden Marachekku.",
+    organic: true,
+    inStock: true,
+    freshnessScore: 98,
+    rating: "4.9",
+    imageUrl: "/images/desiri-glass-bottle.png",
+  },
+  {
+    id: 2,
+    name: "A2 Gir Cow Bilona Cultured Desi Ghee",
+    slug: "a2-gir-cow-bilona-ghee",
+    price: 1450,
+    unit: "500 ml Glass Jar",
+    category: "gau-products",
+    description: "Prepared using traditional wooden churner from curd of grass-fed Gir cows.",
+    organic: true,
+    inStock: true,
+    freshnessScore: 99,
+    rating: "5.0",
+    imageUrl: "/images/desiri-tin-can.png",
+  },
+  {
+    id: 3,
+    name: "Pure Bull-Driven Sesame / Gingelly Oil",
+    slug: "bull-driven-sesame-oil",
+    price: 490,
+    unit: "1 Litre Glass Bottle",
+    category: "oils",
+    description: "Wood-pressed with organic palm jaggery for authentic taste and maximum nutrients.",
+    organic: true,
+    inStock: true,
+    freshnessScore: 96,
+    rating: "4.8",
+    imageUrl: "/images/desiri-glass-bottle.png",
+  },
+  {
+    id: 4,
+    name: "Desi Coconut Oil (Bull-Driven Marachekku)",
+    slug: "desi-coconut-oil",
+    price: 410,
+    unit: "1 Litre Glass Bottle",
+    category: "oils",
+    description: "Extracted from sun-dried natural sulphur-free copra at room temperature.",
+    organic: true,
+    inStock: true,
+    freshnessScore: 97,
+    rating: "4.9",
+    imageUrl: "/images/desiri-glass-bottle.png",
+  },
+];
+
 export default function Home() {
   const { data: featuredProducts } = useListFeaturedProducts();
   const { data: categories } = useListCategories();
   const { data: summary } = useGetDiscoverSummary();
   const { data: farms } = useListFarms();
+
+  const displayCategories = Array.isArray(categories) && categories.length > 0 ? categories : DEFAULT_CATEGORIES;
+  const displayProducts = Array.isArray(featuredProducts) && featuredProducts.length > 0 ? (featuredProducts as any[]) : DEFAULT_FEATURED;
+  const displayFarms = Array.isArray(farms) ? farms : [];
 
   const marqueeText = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
 
@@ -187,7 +258,7 @@ export default function Home() {
           </div>
         </div>
         <div className="flex gap-4 px-6 lg:px-8 overflow-x-auto pb-2 scrollbar-none">
-          {categories?.map((category) => {
+          {displayCategories.map((category) => {
             const imgSrc = category.imageUrl || CATEGORY_IMAGES[category.slug];
             const fallbackIcon = CATEGORY_ICONS[category.slug] ?? "🌾";
             return (
@@ -230,8 +301,8 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {featuredProducts?.slice(0, 8).map((product) => (
-              <ProductCard key={product.id} product={product} />
+            {displayProducts.slice(0, 8).map((product) => (
+              <ProductCard key={product.id} product={product as any} />
             ))}
           </div>
         </div>
@@ -301,7 +372,7 @@ export default function Home() {
       </section>
 
       {/* ── FARM STORIES ─────────────────────────────────────── */}
-      {farms && farms.length > 0 && (
+      {displayFarms.length > 0 && (
         <section className="py-24 bg-background">
           <div className="container mx-auto px-6 lg:px-8">
             <div className="flex items-end justify-between mb-12">
@@ -315,7 +386,7 @@ export default function Home() {
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
-              {farms.slice(0, 3).map((farm) => (
+              {displayFarms.slice(0, 3).map((farm) => (
                 <Link key={farm.id} href={`/farms/${farm.id}`} className="group relative rounded-2xl overflow-hidden aspect-[4/5] bg-muted border border-border hover:border-[#C4602A]/40 transition-all">
                   {farm.imageUrl ? (
                     <img src={farm.imageUrl} alt={farm.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />

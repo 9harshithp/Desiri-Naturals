@@ -21,7 +21,65 @@ import Signup from "@/pages/signup";
 import AdminDashboard from "@/pages/admin/index";
 import NotFound from "@/pages/not-found";
 
-const queryClient = new QueryClient();
+import React, { Component, ErrorInfo, ReactNode } from "react";
+
+interface ErrorBoundaryProps {
+  children: ReactNode;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error?: Error;
+}
+
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  public state: ErrorBoundaryState = {
+    hasError: false,
+  };
+
+  public static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    return { hasError: true, error };
+  }
+
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error("Uncaught application error:", error, errorInfo);
+  }
+
+  public render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-[#111008] text-white p-6">
+          <div className="max-w-md text-center space-y-4">
+            <h1 className="text-2xl font-serif font-bold text-[#e8c97e]">Desiri Naturals</h1>
+            <p className="text-white/70 text-sm">
+              We encountered a temporary hiccup while loading the store.
+            </p>
+            <button
+              onClick={() => {
+                this.setState({ hasError: false });
+                window.location.reload();
+              }}
+              className="px-6 py-2.5 rounded-full bg-[#C4602A] text-white text-sm font-semibold hover:bg-[#a84e22] transition-colors"
+            >
+              Refresh Store
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function Router() {
   return (
@@ -59,10 +117,12 @@ function App() {
       <AuthProvider>
         <PincodeProvider>
           <TooltipProvider>
-            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-              <Router />
-            </WouterRouter>
-            <Toaster />
+            <ErrorBoundary>
+              <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+                <Router />
+              </WouterRouter>
+              <Toaster />
+            </ErrorBoundary>
           </TooltipProvider>
         </PincodeProvider>
       </AuthProvider>

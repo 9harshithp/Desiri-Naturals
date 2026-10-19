@@ -444,7 +444,7 @@ export default function Boxes() {
       {/* TAB 2: CURATED SUBSCRIPTION BOXES */}
       {activeTab === "curated" && (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {boxes?.map((box) => (
+          {Array.isArray(boxes) && boxes.map((box) => (
             <div key={box.id} className={`relative flex flex-col bg-card rounded-3xl border ${box.isPopular ? 'border-primary shadow-lg scale-105 z-10' : 'shadow-sm'} overflow-hidden`}>
               {box.isPopular && (
                 <div className="bg-primary text-primary-foreground text-xs font-bold text-center py-1.5 tracking-wider uppercase">

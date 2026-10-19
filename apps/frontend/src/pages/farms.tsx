@@ -18,7 +18,7 @@ export default function Farms() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {farms?.map((farm) => (
+        {Array.isArray(farms) && farms.map((farm) => (
           <Link key={farm.id} href={`/farms/${farm.id}`} className="group flex flex-col bg-card border rounded-3xl overflow-hidden hover:shadow-lg transition-all hover:border-primary/50">
             <div className="relative h-64 overflow-hidden bg-muted">
               {farm.imageUrl ? (
