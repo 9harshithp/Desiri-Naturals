@@ -6,6 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { FALLBACK_PRODUCTS } from "@/lib/fallbackCatalog";
 
 const TRENDING_SEARCHES = [
   "Bull-Driven Groundnut Oil",
@@ -57,7 +58,7 @@ export function PredictiveSearch({ onSelect }: { onSelect?: () => void }) {
   }, []);
 
   const searchParams = debouncedQuery ? { search: debouncedQuery } : undefined;
-  const { data: searchResults, isLoading } = useListProducts(
+  const { data: searchResults, isLoading: isSearchLoading } = useListProducts(
     searchParams,
     {
       query: {
@@ -66,6 +67,21 @@ export function PredictiveSearch({ onSelect }: { onSelect?: () => void }) {
       },
     }
   );
+
+  const results = React.useMemo(() => {
+    if (Array.isArray(searchResults) && searchResults.length > 0) {
+      return searchResults;
+    }
+    if (debouncedQuery.length >= 2) {
+      const q = debouncedQuery.toLowerCase();
+      return FALLBACK_PRODUCTS.filter(
+        (p) => p.name.toLowerCase().includes(q) || (p.description && p.description.toLowerCase().includes(q))
+      );
+    }
+    return [];
+  }, [searchResults, debouncedQuery]);
+
+  const isLoading = isSearchLoading && results.length === 0;
 
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -205,14 +221,14 @@ export function PredictiveSearch({ onSelect }: { onSelect?: () => void }) {
           )}
 
           {/* STATE 3: Results Found */}
-          {debouncedQuery.length >= 2 && !isLoading && searchResults && searchResults.length > 0 && (
+          {debouncedQuery.length >= 2 && !isLoading && results.length > 0 && (
             <div className="max-h-[380px] overflow-y-auto divide-y divide-border/60">
               <div className="p-2.5 bg-muted/30 text-xs text-muted-foreground flex items-center justify-between font-medium">
                 <span>Products matching "{debouncedQuery}"</span>
-                <span className="text-emerald-700 dark:text-emerald-400 font-bold">{searchResults.length} found</span>
+                <span className="text-emerald-700 dark:text-emerald-400 font-bold">{results.length} found</span>
               </div>
 
-              {searchResults.slice(0, 6).map((product) => (
+              {results.slice(0, 6).map((product) => (
                 <div
                   key={product.id}
                   className="p-3 hover:bg-muted/40 transition-colors flex items-center justify-between gap-3"
@@ -276,14 +292,14 @@ export function PredictiveSearch({ onSelect }: { onSelect?: () => void }) {
                 onClick={handleSubmit}
                 className="w-full p-3 text-center text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50/50 dark:bg-emerald-950/30 hover:bg-emerald-50 dark:hover:bg-emerald-950/60 transition-colors flex items-center justify-center gap-1.5"
               >
-                <span>View all {searchResults.length} results for "{debouncedQuery}"</span>
+                <span>View all {results.length} results for "{debouncedQuery}"</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </button>
             </div>
           )}
 
           {/* STATE 4: Zero Results */}
-          {debouncedQuery.length >= 2 && !isLoading && searchResults && searchResults.length === 0 && (
+          {debouncedQuery.length >= 2 && !isLoading && results.length === 0 && (
             <div className="p-6 text-center space-y-3">
               <div className="text-xs text-muted-foreground">
                 No items directly matching "<span className="font-semibold text-foreground">{debouncedQuery}</span>"

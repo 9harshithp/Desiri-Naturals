@@ -74,14 +74,19 @@ function StarPicker({ value, onChange }: { value: number; onChange: (v: number) 
   );
 }
 
+import { FALLBACK_PRODUCTS } from "@/lib/fallbackCatalog";
+
 export default function ProductDetail({ params }: { params: { id: string } }) {
   const id = parseInt(params.id);
-  const { data: product, isLoading } = useGetProduct(id, {
+  const { data: apiProduct, isLoading: isQueryLoading } = useGetProduct(id, {
     query: {
       enabled: !!id,
       queryKey: getGetProductQueryKey(id),
     },
   });
+
+  const product = apiProduct || FALLBACK_PRODUCTS.find((p) => p.id === id);
+  const isLoading = isQueryLoading && !product;
   const { data: reviews } = useListProductReviews(id, {
     query: {
       enabled: !!id,

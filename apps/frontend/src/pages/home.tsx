@@ -32,72 +32,7 @@ const CATEGORY_ICONS: Record<string, string> = {
   grains: "🌾", herbs: "🌿", spices: "🌶️", honey: "🍯",
 };
 
-const DEFAULT_CATEGORIES = [
-  { id: 1, name: "Bull-Driven Oils", slug: "oils", imageUrl: "/images/cat-oils.png" },
-  { id: 2, name: "A2 Desi Ghee", slug: "gau-products", imageUrl: "/images/cat-dairy.png" },
-  { id: 3, name: "Millets & Grains", slug: "millets", imageUrl: "/images/cat-vegetables.png" },
-  { id: 4, name: "Natural Sweeteners", slug: "sweetener", imageUrl: "/images/cat-fruits.png" },
-  { id: 5, name: "Pure Spices", slug: "spices", imageUrl: "/images/cat-vegetables.png" },
-];
-
-const DEFAULT_FEATURED = [
-  {
-    id: 1,
-    name: "Bull-Driven Groundnut Oil (Wood Pressed)",
-    slug: "bull-driven-groundnut-oil",
-    price: 380,
-    unit: "1 Litre Glass Bottle",
-    category: "oils",
-    description: "Cold-pressed using indigenous Kangayam bullocks at 2-3 RPM in wooden Marachekku.",
-    organic: true,
-    inStock: true,
-    freshnessScore: 98,
-    rating: "4.9",
-    imageUrl: "/images/desiri-glass-bottle.png",
-  },
-  {
-    id: 2,
-    name: "A2 Gir Cow Bilona Cultured Desi Ghee",
-    slug: "a2-gir-cow-bilona-ghee",
-    price: 1450,
-    unit: "500 ml Glass Jar",
-    category: "gau-products",
-    description: "Prepared using traditional wooden churner from curd of grass-fed Gir cows.",
-    organic: true,
-    inStock: true,
-    freshnessScore: 99,
-    rating: "5.0",
-    imageUrl: "/images/desiri-tin-can.png",
-  },
-  {
-    id: 3,
-    name: "Pure Bull-Driven Sesame / Gingelly Oil",
-    slug: "bull-driven-sesame-oil",
-    price: 490,
-    unit: "1 Litre Glass Bottle",
-    category: "oils",
-    description: "Wood-pressed with organic palm jaggery for authentic taste and maximum nutrients.",
-    organic: true,
-    inStock: true,
-    freshnessScore: 96,
-    rating: "4.8",
-    imageUrl: "/images/desiri-glass-bottle.png",
-  },
-  {
-    id: 4,
-    name: "Desi Coconut Oil (Bull-Driven Marachekku)",
-    slug: "desi-coconut-oil",
-    price: 410,
-    unit: "1 Litre Glass Bottle",
-    category: "oils",
-    description: "Extracted from sun-dried natural sulphur-free copra at room temperature.",
-    organic: true,
-    inStock: true,
-    freshnessScore: 97,
-    rating: "4.9",
-    imageUrl: "/images/desiri-glass-bottle.png",
-  },
-];
+import { FALLBACK_CATEGORIES, FALLBACK_PRODUCTS } from "@/lib/fallbackCatalog";
 
 export default function Home() {
   const { data: featuredProducts } = useListFeaturedProducts();
@@ -105,8 +40,8 @@ export default function Home() {
   const { data: summary } = useGetDiscoverSummary();
   const { data: farms } = useListFarms();
 
-  const displayCategories = Array.isArray(categories) && categories.length > 0 ? categories : DEFAULT_CATEGORIES;
-  const displayProducts = Array.isArray(featuredProducts) && featuredProducts.length > 0 ? (featuredProducts as any[]) : DEFAULT_FEATURED;
+  const displayCategories = Array.isArray(categories) && categories.length > 0 ? categories : FALLBACK_CATEGORIES;
+  const displayProducts = Array.isArray(featuredProducts) && featuredProducts.length > 0 ? (featuredProducts as any[]) : FALLBACK_PRODUCTS;
   const displayFarms = Array.isArray(farms) ? farms : [];
 
   const marqueeText = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];

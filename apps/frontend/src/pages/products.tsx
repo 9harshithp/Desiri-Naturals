@@ -3,8 +3,10 @@ import { useLocation, useSearch } from "wouter";
 import { 
   useListProducts, 
   useListCategories,
-  ListProductsSort 
+  ListProductsSort,
+  Product 
 } from "@workspace/api-client-react";
+import { FALLBACK_PRODUCTS } from "@/lib/fallbackCatalog";
 import { ProductCard } from "@/components/ProductCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -78,6 +80,36 @@ export default function Products() {
     seasonal: isSeasonal || undefined,
     sort
   });
+
+  const displayedProducts = useMemo(() => {
+    let list: Product[] = [];
+    if (Array.isArray(products) && products.length > 0) {
+      list = [...products];
+    } else {
+      list = [...FALLBACK_PRODUCTS];
+      if (category) {
+        list = list.filter((p) => p.categorySlug === category);
+      }
+      if (debouncedSearch) {
+        const q = debouncedSearch.toLowerCase();
+        list = list.filter((p) => p.name.toLowerCase().includes(q) || (p.description && p.description.toLowerCase().includes(q)));
+      }
+      if (isOrganic) {
+        list = list.filter((p) => p.isOrganic);
+      }
+      if (isSeasonal) {
+        list = list.filter((p) => p.isSeasonal);
+      }
+      if (sort === "price_asc") {
+        list.sort((a, b) => Number(a.price) - Number(b.price));
+      } else if (sort === "price_desc") {
+        list.sort((a, b) => Number(b.price) - Number(a.price));
+      } else if (sort === "rating") {
+        list.sort((a, b) => Number(b.rating || 0) - Number(a.rating || 0));
+      }
+    }
+    return list;
+  }, [products, category, debouncedSearch, isOrganic, isSeasonal, sort]);
 
   const handleTabClick = (slug?: string) => {
     const nextParams = new URLSearchParams(searchString);
@@ -153,7 +185,7 @@ export default function Products() {
 
         <div className="flex items-center gap-3">
           <span className="text-xs text-muted-foreground whitespace-nowrap">
-            Showing <strong className="text-foreground">{products?.length || 0}</strong> products
+            Showing <strong className="text-foreground">{displayedProducts.length}</strong> products
           </span>
 
           <Select value={sort || "newest"} onValueChange={(val) => setSort(val as ListProductsSort)}>
@@ -185,9 +217,9 @@ export default function Products() {
             </div>
           ))}
         </div>
-      ) : Array.isArray(products) && products.length > 0 ? (
+      ) : displayedProducts.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-7">
-          {products.map((product) => (
+          {displayedProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
