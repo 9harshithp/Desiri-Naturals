@@ -86,7 +86,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Validate and push Drizzle ORM schema
-        run: pnpm run db:push
+        run: pnpm --filter @workspace/db exec drizzle-kit push --force --config ./drizzle.config.ts
 
       - name: Seed isolated PostgreSQL test database
         run: |
@@ -116,3 +116,4 @@ jobs:
 
           curl -fsS http://localhost:5000/api/healthz
           curl -fsS http://localhost:5000/api/products >/dev/null
+
