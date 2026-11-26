@@ -8,6 +8,7 @@
 
 **From farm to your doorstep.**
 
+[![CI](https://github.com/9harshithp/Desiri-Naturals/actions/workflows/ci.yml/badge.svg)](https://github.com/9harshithp/Desiri-Naturals/actions/workflows/ci.yml)
 [![Live Website](https://img.shields.io/badge/Live_Website-Visit_Now-166534?style=for-the-badge&logo=vercel&logoColor=white)](https://desiri-naturals-km63.vercel.app/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](#technology-stack)
 [![React](https://img.shields.io/badge/React-19-20232A?style=for-the-badge&logo=react)](#technology-stack)
