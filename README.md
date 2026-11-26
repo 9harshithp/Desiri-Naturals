@@ -124,22 +124,67 @@ Its engineering architecture combines a TypeScript monorepo, contract-driven API
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
+
+Desiri Naturals uses a TypeScript monorepo with pnpm workspaces,
+shared API contracts and independently structured frontend
+and backend applications.
 
 ```mermaid
-flowchart TD
-    U["Customers and Admins"] --> F["React 19 Frontend"]
-    F --> Q["Generated TanStack Query Client"]
+flowchart TB
+    U["Customers and Administrators"] --> F["React 19 / Vite Frontend"]
+    F --> Q["TanStack Query API Client"]
     Q -->|REST API| B["Express 5 Backend"]
-    B --> Z["Zod Validation"]
-    Z --> L["Application Logic"]
-    L --> D["Drizzle ORM"]
-    D --> P[("PostgreSQL")]
 
-    O["OpenAPI Specification"] --> C["Orval Code Generation"]
-    C --> Q
-    C --> Z
+    B --> A["Authentication and RBAC"]
+    B --> C["Product Catalog and Cart"]
+    B --> O["Order Management"]
+    B --> D["Delivery and Invoice Services"]
+
+    A --> ORM["Drizzle ORM"]
+    C --> ORM
+    O --> ORM
+    D --> ORM
+
+    ORM --> DB[("PostgreSQL")]
 ```
+
+### Order Processing Workflow
+
+```mermaid
+sequenceDiagram
+    actor C as Customer
+    participant F as React Frontend
+    participant A as Express API
+    participant D as PostgreSQL
+
+    C->>F: Browse products and select items
+    F->>A: Update shopping cart
+    A->>D: Store cart items
+    C->>F: Enter delivery pincode
+    F->>A: Validate delivery availability
+    A-->>F: Delivery status
+    C->>F: Confirm order
+    F->>A: Submit order
+    A->>D: Save order details
+    A-->>F: Order confirmation
+    F-->>C: Display order and invoice
+```
+
+### Engineering Design
+
+| Design decision | Purpose |
+|---|---|
+| pnpm workspaces | Shared dependencies and modular development |
+| TypeScript | Compile-time type safety |
+| OpenAPI | Standardized API contracts |
+| Orval | Automated API client generation |
+| Zod | Runtime data validation |
+| TanStack Query | Server-state management |
+| Drizzle ORM | Type-safe database queries |
+| PostgreSQL | Relational data persistence |
+| RBAC | Customer and administrator authorization |
+| GitHub Actions | Automated build and test verification |
 
 ### Architecture Highlights
 
@@ -390,7 +435,7 @@ Configure dedicated demonstration accounts for local testing. Never reuse develo
 - [x] Contract-driven APIs
 - [x] Vercel frontend deployment
 - [ ] Expanded automated testing
-- [ ] CI/CD quality pipeline
+- [x] GitHub Actions continuous integration
 - [ ] Production monitoring
 - [ ] Additional performance optimization
 
